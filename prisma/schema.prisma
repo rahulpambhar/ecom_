@@ -1,0 +1,439 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum Status {
+  PENDING
+  SUCCESS
+  CANCEL
+  FAIL
+}
+
+enum transportMode {
+  AIR
+  ROAD
+  RAIL
+  SHIP
+}
+
+enum DiscountType {
+  FIXED
+  PERCENTAGE
+}
+
+enum Action {
+  INSERT
+  UPDATE
+  DELETE
+}
+
+model User {
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  email String
+  name  String
+
+  country_code String
+  mobile       String
+
+  city    String
+  country String
+  address String
+  pincode String
+
+  gender             String
+  password           String
+  passwordResetToken String?
+  profile_pic        String?
+  isBlocked          Boolean @default(false)
+  isAdmin            Boolean @default(false)
+  is_mobile_verified Boolean @default(false)
+
+  products    Products[]
+  Order       Order[]       @relation("user")
+  tempOrder   tempOrder[]   @relation("user")
+  Review      Review[]
+  Cart        Cart[]        @relation("user")
+  activityLog activityLog[] @relation("activityLog")
+  whishlist   Whishlist[]
+  Category    Category[]
+  SubCategory SubCategory[]
+
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+
+  @@index([email])
+  @@index([mobile])
+  @@index([is_mobile_verified])
+  @@index([isAdmin])
+}
+
+model Category {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  name      String?
+  image     String?
+  User      User?   @relation(fields: [userId], references: [id])
+  userId    String? @db.ObjectId
+  isBlocked Boolean @default(false)
+
+  SubCategory SubCategory[] @relation("Category")
+  Products    Products[]
+
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+}
+
+model SubCategory {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  name      String?
+  image     String?
+  User      User?   @relation(fields: [userId], references: [id])
+  userId    String? @db.ObjectId
+  isBlocked Boolean @default(false)
+
+  Category   Category? @relation("Category", fields: [categoryId], references: [id])
+  categoryId String?   @db.ObjectId
+
+  products Products[] @relation("SubCategory")
+
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+}
+
+model uom {
+  id            String  @id @default(auto()) @map("_id") @db.ObjectId
+  name          String  @unique
+  shortname     String
+  decimalNumber Int
+  isDelete      Boolean @default(false)
+
+  createAt  DateTime   @default(now())
+  createdBy Int        @default(0)
+  updateAt  DateTime   @default(now()) @updatedAt
+  updateBy  Int        @default(0)
+  Products  Products[]
+}
+
+model Products {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  batchNo      String?
+  uid          String?
+  name         String?
+  qty          Int?
+  price        Float?
+  hsn          String?
+  discount     Int?
+  DiscountType DiscountType
+  description  String?
+
+  image      String[]
+  video      String?
+  brand      String?
+  isBlocked  Boolean  @default(false)
+  avgRating  Float?
+  numReviews Int?
+
+  uom   uom?    @relation(fields: [uomId], references: [id])
+  uomId String? @db.ObjectId
+
+  user   User?   @relation(fields: [userId], references: [id])
+  userId String? @db.ObjectId
+
+  Category   Category? @relation(fields: [categoryId], references: [id])
+  categoryId String?   @db.ObjectId
+
+  SubCategory   SubCategory? @relation("SubCategory", fields: [subCategoryId], references: [id])
+  subCategoryId String?      @db.ObjectId
+
+  Review    Review[]
+  whishlist Whishlist[]
+
+  CartItem      CartItem[]
+  OrderItem     OrderItem[]     @relation("orderProducts")
+  tempOrderItem tempOrderItem[] @relation("orderProducts")
+
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+
+  @@index([name])
+  @@index([categoryId])
+  @@index([subCategoryId])
+  @@index([brand])
+  @@index([batchNo])
+  @@index([uid])
+  @@index([userId])
+}
+
+model Cart {
+  id     String  @id @default(auto()) @map("_id") @db.ObjectId
+  user   User?   @relation("user", fields: [userId], references: [id])
+  userId String? @db.ObjectId
+
+  isBlocked Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+
+  CartItem  CartItem[]
+  Order     Order[]
+  tempOrder tempOrder[]
+
+  @@index([userId])
+}
+
+model CartItem {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  qty       Int?
+  isBlocked Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+
+  Cart      Cart?     @relation(fields: [cartId], references: [id])
+  cartId    String?   @db.ObjectId
+  product   Products? @relation(fields: [productId], references: [id])
+  productId String?   @db.ObjectId
+
+  @@index([cartId])
+  @@index([productId])
+}
+
+model Whishlist {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  user      User?     @relation(fields: [userId], references: [id])
+  userId    String?   @db.ObjectId
+  product   Products? @relation(fields: [productId], references: [id])
+  productId String?   @db.ObjectId
+
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+
+  @@index([userId])
+}
+
+model Order {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  invoiceNo   String?
+  invoiceDate DateTime @db.Date()
+
+  itemCount Int?
+
+  discountAmount Float
+  total          Int
+  taxableAmount  Int
+  tax            Int
+  otherCharge    Int
+  charge         Json? // note for charges or extra charges
+  netAmount      Int
+
+  isPaid        Boolean
+  paidAt        DateTime
+  payStatus     Status
+  paymentDetail Json?
+  paymentMethod String?
+
+  isDelivered     Boolean?
+  deliveredAt     DateTime?
+  deliveryAddress String?
+
+  dueDays Int?
+  dueDate DateTime? @db.Date()
+
+  isBlocked  Boolean @default(false)
+  attachment String?
+
+  user   User?   @relation("user", fields: [userId], references: [id])
+  userId String? @db.ObjectId
+
+  cart   Cart?   @relation(fields: [cartId], references: [id])
+  cartId String? @db.ObjectId
+
+  Transport     Transport?     @relation("transportOrder", fields: [transportId], references: [id])
+  transportId   String?        @db.ObjectId
+  transportMode transportMode?
+
+  OrderItem OrderItem[] @relation("OrderItem")
+
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+
+  @@index([userId])
+}
+
+model OrderItem {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  qty       Int?
+  price     Float?
+  netAmount Int?
+  isBlocked Boolean @default(false)
+
+  order   Order?  @relation("OrderItem", fields: [orderId], references: [id])
+  orderId String? @db.ObjectId
+
+  product   Products? @relation("orderProducts", fields: [productId], references: [id])
+  productId String?   @db.ObjectId
+
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+
+  @@index([orderId])
+  @@index([productId])
+}
+
+model tempOrder {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  invoiceNo   String?
+  invoiceDate DateTime @db.Date()
+
+  itemCount Int?
+
+  discountAmount Float
+  total          Int
+  taxableAmount  Int
+  tax            Int
+  otherCharge    Int
+  charge         Json? // note for charges or extra charges
+  netAmount      Int
+
+  isPaid        Boolean
+  paidAt        DateTime
+  payStatus     Status
+  paymentDetail Json?
+  paymentMethod String?
+
+  isDelivered     Boolean?
+  deliveredAt     DateTime?
+  deliveryAddress String?
+
+  dueDays Int?
+  dueDate DateTime? @db.Date()
+
+  isBlocked  Boolean @default(false)
+  attachment String?
+
+  user   User?   @relation("user", fields: [userId], references: [id])
+  userId String? @db.ObjectId
+
+  cart   Cart?   @relation(fields: [cartId], references: [id])
+  cartId String? @db.ObjectId
+
+  Transport     Transport?     @relation("transportOrder", fields: [transportId], references: [id])
+  transportId   String?        @db.ObjectId
+  transportMode transportMode?
+
+  tempOrderItem tempOrderItem[] @relation("tempOrderItem")
+
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+
+  @@index([userId])
+}
+
+model tempOrderItem {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  qty       Int?
+  price     Float?
+  netAmount Int?
+  isBlocked Boolean @default(false)
+
+  tempOrder   tempOrder? @relation("tempOrderItem", fields: [tempOrderId], references: [id])
+  tempOrderId String?    @db.ObjectId
+
+  product   Products? @relation("orderProducts", fields: [productId], references: [id])
+  productId String?   @db.ObjectId
+
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+
+  @@index([tempOrderId])
+  @@index([productId])
+}
+
+model Review {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  name      String?
+  rating    Int?
+  comment   String?
+  user      User?     @relation(fields: [userId], references: [id])
+  userId    String?   @db.ObjectId
+  product   Products? @relation(fields: [productId], references: [id])
+  productId String?   @db.ObjectId
+  isDelete  Boolean   @default(false)
+
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedAt DateTime @updatedAt
+  updatedBy String
+
+  @@index([userId])
+  @@index([productId])
+}
+
+model activityLog {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  action Action
+  table  String
+  body   Json
+
+  createdAt DateTime @default(now())
+
+  user      User?  @relation("activityLog", fields: [createdBy], references: [id])
+  createdBy String @db.ObjectId
+}
+
+model Transport {
+  id             String  @id @default(auto()) @map("_id") @db.ObjectId
+  name           String  @unique
+  phoneNumber    String
+  AltPhoneNumber String
+  address        String
+  pincode        String
+  state          String
+  city           String
+  country        String
+  gstNo          String
+  isDelete       Boolean @default(false)
+
+  order     Order[]     @relation("transportOrder")
+  tempOrder tempOrder[] @relation("transportOrder")
+
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedAt DateTime @updatedAt
+  updatedBy String
+}
