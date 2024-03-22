@@ -8,7 +8,6 @@ import LoginModal from "../components/Login/index";
 import path from "path";
 import { ThemeProvider } from "next-themes";
 import Loading from "./loading";
-import Header from "@/components/frontside/Header";
 import ButtonCustom from "@/components/frontside/ButtonCustom";
 import Category from "@/components/frontside/Category";
 import Expediency from "@/components/frontside/Expediency";
@@ -21,7 +20,6 @@ import About from "@/components/frontside_viraj/Careaboutpage/page";
 import Howitwork from "@/components/frontside_viraj/HowItWork/page";
 import ImageSlider from "@/components/frontside_viraj/Imageslider/page";
 import Nailslider from "@/components/frontside_viraj/Nailsliderpage/page";
-import Navbar from "@/components/frontside_viraj/Navbar/page";
 import Recentviewed from "@/components/frontside_viraj/Recentviewed/page";
 import Submitemail from "@/components/frontside_viraj/SubmitEmail/page";
 import Topselectionpart from "@/components/frontside_viraj/Topselectionpage/page";
@@ -29,6 +27,7 @@ import Unitedfree from "@/components/frontside_viraj/Unitedfreepage/page";
 import OfferPage from "@/components/frontside_viraj/offer/page";
 import Singlenailpaint from "@/components/frontside_viraj/singlenailpaint/page";
 import { useStore } from "react-redux";
+import Navbar from "@/components/frontside/Navbar/page";
 
 export default function Template({ children }: any) {
   const pathname = usePathname();
@@ -48,7 +47,7 @@ export default function Template({ children }: any) {
   return (
     <div id="root">
       <div>
-        <Header />
+        <Navbar />
         {children}
         {status === "authenticated" &&
           session?.user?.isAdmin &&

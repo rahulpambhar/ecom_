@@ -1,10 +1,10 @@
 import Breadcrumb from "@/components/admin/breadcrumb";
 
-import Footer from "@/components/frontside/Footer";
-import Navbar from "@/components/frontside_viraj/Navbar/page";
-import Deals from "@/components/frontside_viraj/deals/Deals";
-import Filter from "@/components/frontside_viraj/filter/Filter";
-import Sidebar from "@/components/frontside_viraj/sidebar/Sidebar";
+import Footer from "@/components/frontside/Footer/page";
+import Navbar from "@/components/frontside/Navbar/page";
+import Deals from "@/components/frontside/deals/Deals";
+import Filter from "@/components/frontside/filter/Filter";
+import Sidebar from "@/components/frontside/sidebar/Sidebar";
 
 const layout = ({
   children,
@@ -13,12 +13,12 @@ const layout = ({
 }>) => {
   return (
     <div>
-      <Navbar />
+      {/* <Navbar /> */}
       <div className="grid">
         <div className="grid">
-          <div>
+          {/* <div>
             <Breadcrumb />
-          </div>
+          </div> */}
           <div className="">
             {" "}
             <Filter />
