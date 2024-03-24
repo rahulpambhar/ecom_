@@ -9,9 +9,7 @@ import Topselectionpart from "@/components/frontside/Topselectionpage/page";
 import Unitedfree from "@/components/frontside/Unitedfreepage/page";
 import OfferPage from "@/components/frontside/offer/page";
 import Singlenailpaint from "@/components/frontside/singlenailpaint/page";
-import Footer from "@/components/frontside/Footer/page";
 
-import { useStore } from "react-redux";
 
 export default function Home() {
   return (
@@ -25,8 +23,7 @@ export default function Home() {
       <Unitedfree />
       <Howitwork />
       <Recentviewed />
-      <Submitemail />
-      <Footer />
+      <Submitemail />    
     </main>
   );
 }

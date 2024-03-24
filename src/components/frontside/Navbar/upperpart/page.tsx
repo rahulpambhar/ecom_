@@ -44,7 +44,7 @@ const Uppernav = () => {
             }}
           />
           <div className="absolute -top-2 right-9  bg-white rounded-full px-2">
-            0
+            {cart && cart?.CartItem?.length}
           </div>
           <Image src={"/image/UserCircle.svg"} alt="" width={28} height={100} />
           <div className="text-light">

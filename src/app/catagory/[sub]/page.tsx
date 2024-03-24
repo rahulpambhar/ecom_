@@ -117,7 +117,6 @@ const Topselectionitem = [
     id: 19,
     image: "/image/makeup_nail.svg",
     label: "Third Item",
-
     description: "4.4  (57,164)",
   },
 ];
@@ -125,15 +124,14 @@ const Topselectionitem = [
 const Page = () => {
   const params = useParams();
   const dispatch = useAppDispatch();
-  const categories: Categories[] = useAppSelector((state): any => state?.categories?.categories);
-  const subCategories: SubCategory[] = categories.filter((item: any) => item?.name === params.sub).flatMap((category: any) => category.SubCategory);
+  const products: any[] = useAppSelector((state): any => state?.categories?.products);
   const [currentPage, setCurrentPage] = useState(1);
   const [postPerPage, setPostPerPage] = useState(12);
 
   const lastPostIndex = currentPage * postPerPage;
   const firstPostIndex = lastPostIndex - postPerPage;
-  const currentpage = Topselectionitem.slice(firstPostIndex, lastPostIndex);
-  const nopage = Math.ceil(Topselectionitem.length / postPerPage);
+  const currentpage = products.slice(firstPostIndex, lastPostIndex);
+  const nopage = Math.ceil(products.length / postPerPage);
   const numbers = Array.from({ length: nopage }, (_, index) => index + 1);
 
   const paginate = (pageNumber: number) => {
@@ -154,18 +152,15 @@ const Page = () => {
     dispatch(fetchCategories({ page: 1, limit: 100 }));
   }, [dispatch]);
 
-
   return (
     <>
       <div className=" pt-5 border-l-2  ">
         <div className=" grid grid-cols-1 md:grid-cols-2  lg:grid-cols-4 pt-5  justify-center items-center">
-          {Topselectionitem.length > 0
+          {products.length > 0
             ? currentpage.map((item, index) => (
               <Makeupnailscard
-                key={item.id}
-                image={item.image}
-                label={item.label}
-                discription={item.description}
+                key={index}
+                item={item}              
               />
             ))
             : ""}
@@ -198,29 +193,17 @@ const Page = () => {
                   </div>
                 );
               }
-
               return null;
             })}
           </div>
           <button>
-            <span
-              className="text-lg font-bold roboto uppercase bg-[#ece7e7] w-[320px] py-6 flex justify-center items-center"
-              onClick={() => nextpage()}
-            >
+            <span className="text-lg font-bold roboto uppercase bg-[#ece7e7] w-[320px] py-6 flex justify-center items-center"
+              onClick={() => nextpage()}            >
               Next
             </span>
           </button>
         </div>
       </div>
-      {/* <div className="grid grid-cols-1 mt-[60px] gap-10 px-5 sm:grid-cols-2 sm:px-[100px] md:px-[150px] md:grid-cols-4 lg:xl:">
-        {subCategories.map((item, key) => (
-          <div key={key}>
-            <Link href={`/catagory/${params.sub}/${item.name}`} className="">
-              <CategoryCard name={item?.name} />
-            </Link>
-          </div>
-        ))}
-      </div> */}
     </>
   );
 };

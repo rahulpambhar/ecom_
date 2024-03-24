@@ -3,7 +3,6 @@ import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import Breadcrumb from "@/components/admin/breadcrumb";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { addCategories } from "../redux/slices/categorySlice";
 import dynamic from "next/dynamic";
 // import useTheme from "@/provider/ThemeProvider";
 

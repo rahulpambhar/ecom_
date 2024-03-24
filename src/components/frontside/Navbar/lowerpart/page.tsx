@@ -9,11 +9,6 @@ import { fetchCategories } from '@/app/redux/slices/categorySlice';
 const Lowernav = () => {
   const dispatch = useDispatch();
   const categories = useSelector((state) => state?.categories?.categories);
-  const router = useRouter();
-
-  const handleClick = () => {
-    router.push("/Mackup/Nail");
-  };
 
   useEffect(() => {
     dispatch(fetchCategories());
@@ -23,7 +18,7 @@ const Lowernav = () => {
       <div className=" flex pl-3 gap-5 md:gap-10 ">
         {categories?.map((ele) => (
           <button className="w-[80px] h-[30px] font-semibold md:h-[40px] md:w-[119px] uppercase md:font-bold hover:bg-black hover:text-white rounded-full"    >
-            <Link href={`catagory/${ele.name}`} className="">
+            <Link href={`/catagory/${ele.name}`} className="">
               <p className="text-[var(--primary5)] text-center">
                 {ele.name}
               </p>

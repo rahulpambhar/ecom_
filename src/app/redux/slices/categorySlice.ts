@@ -4,8 +4,11 @@ import { apiUrl } from "../../../../env"
 import { CategoriesState } from "../../../../types/global";
 
 
-const initialState: CategoriesState = {
+const initialState: any = {
     categories: [],
+    subCategories: [],
+    productsList: [],
+    products: [],
     loading: false,
     error: null,
     status: 'idle',
@@ -22,31 +25,13 @@ export const fetchCategories = createAsyncThunk('categories/fetchCategories', as
     }
 });
 
-
-
 const categoriesReducer = createSlice({
     name: 'categories',
     initialState,
     reducers: {
-        addCategories: (state, action: any) => {
-            state.categories.push(action.payload);
-        },
-        // updateCategories: (state: any, action) => {
-        //     const index = state.categories.findIndex(
-        //         (user) => user.category_name === action.payload?.category_name
-        //     );
-        //     if (index !== -1) {
-        //         state.categories[index] = action.payload.updatedUser;
-        //     }
-        // },
-        // deleteCategories: (state, action) => {
-        //     state.categories = state.categories.filter(
-        //         (user) => user.category_name !== action.payload
-        //     );
-        // },
-        // deleteAllCategories: (state) => {
-        //     state.categories = [];
-        // },
+        setProducts: (state, action: any) => {
+            state.products = action.payload;
+        }
     },
 
     extraReducers: (builder) => {
@@ -57,6 +42,32 @@ const categoriesReducer = createSlice({
             .addCase(fetchCategories.fulfilled, (state, action) => {
                 state.status = 'succeeded';
                 state.categories = action.payload?.data;
+
+                let categories: any = []
+                let products: any = []
+                let subCategories: any = []
+
+                for (let x in action.payload?.data) {
+                    if (action.payload?.data[x].SubCategory.length > 0) {
+                        categories.push(action.payload?.data[x])
+                    }
+                }
+
+                state.categories = categories
+                
+                for (let x in state.categories) {
+                    if (state.categories[x].SubCategory.length > 0) {
+                        for (let y in state.categories[x].SubCategory) {
+                            if (state.categories[x].SubCategory[y].products.length > 0) {
+                                for (let z in state.categories[x].SubCategory[y].products) {
+                                    products.push(state.categories[x].SubCategory[y].products[z])
+                                }
+                            }
+                        }
+                    }
+                }
+                state.subCategories = subCategories
+                state.productsList = products
             })
             .addCase(fetchCategories.rejected, (state, action) => {
                 state.status = 'failed';
@@ -66,7 +77,7 @@ const categoriesReducer = createSlice({
 });
 
 export const {
-    addCategories,
+    setProducts,
     // updateCategories,
     // deleteCategories,
     // deleteAllCategories,
