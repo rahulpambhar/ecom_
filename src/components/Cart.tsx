@@ -89,7 +89,7 @@ export default function Example() {
                                                         <button
                                                             type="button"
                                                             className="relative -m-2 p-2 text-gray-400 hover:text-gray-500"
-                                                            onClick={() => setOpenCart(false)}
+                                                            onClick={() => dispatch(setOpenCart(!openCart))}
                                                         >
                                                             <span className="absolute -inset-0.5" />
                                                             <span className="sr-only">Close panel</span>
@@ -156,7 +156,6 @@ export default function Example() {
                                             <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
                                                 <div className="flex justify-between text-base font-medium text-gray-900">
                                                     <p>Subtotal</p>
-                                                    {/* <p>$2620.00</p> */}
                                                     <p>$ {subTotal}</p>
                                                 </div>
                                                 <p className="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>

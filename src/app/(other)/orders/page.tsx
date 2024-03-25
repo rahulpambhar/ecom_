@@ -15,7 +15,6 @@ export default function Checkout() {
     const router = useRouter()
     // const openCart = useAppSelector((state) => state?.utilReducer?.openCart);
     // const cartItem = useAppSelector((state) => state?.orderReducer ?) || [];
-    // console.log('cartItem::: ', cartItem);
 
     const orders: any = [
         { id: 1, customer: 'John Doe', total: 500 },

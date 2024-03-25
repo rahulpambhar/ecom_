@@ -100,7 +100,7 @@ export async function getOrders(id) {
     const orders = await prisma.order.findMany({
         where: {
             userId: id,
-            // isBlocked: false,
+            isBlocked: false,
         },
         include: {
             OrderItem: {
@@ -108,8 +108,6 @@ export async function getOrders(id) {
                     product: true,
                 }
             }
-
-
         }
     });
     return orders;

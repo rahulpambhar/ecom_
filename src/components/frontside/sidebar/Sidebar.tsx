@@ -18,9 +18,7 @@ const Sidebar = () => {
           <MultiRangeSlider
             min={120}
             max={5680}
-            onChange={({ min, max }) =>
-              console.log(`min = ${min}, max = ${max}`)
-            }
+            onChange={({ min, max }) => { }}
           />
         </div>
       </div>
