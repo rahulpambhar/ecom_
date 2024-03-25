@@ -4,7 +4,9 @@ import { NextRequest, NextResponse } from 'next/server';
 export default withAuth(
     (req) => {
         if (req.nextUrl.pathname.startsWith("/admin") && !req.nextauth.token?.isAdmin) {
-            console.log('req.nextauth.token?.isAdmin::: ', req.nextauth.token?.isAdmin);
+            return NextResponse.redirect(new URL("/denied", req.url))
+        }
+        if (req.nextUrl.pathname.startsWith("/orders") && !req.nextauth.token) {
             return NextResponse.redirect(new URL("/denied", req.url))
         }
         if (req.nextUrl.pathname.startsWith("/register") && req.nextauth.token) {
@@ -17,11 +19,8 @@ export default withAuth(
     {
         callbacks: {
             authorized: ({ token, req }) => {
-                if (!token && req.nextUrl.pathname.startsWith("/register")) {
-                    return true
-                }
-                if (!token && req.nextUrl.pathname.startsWith("/checkout")) {
-                    return true
+                if (!token && (['/register', '/checkout', '/orders'].some(path => req.nextUrl.pathname.startsWith(path)))) {
+                    return true;
                 }
                 return token != null
             }
@@ -33,5 +32,5 @@ export default withAuth(
 );
 
 export const config = {
-    matcher: ['/admin/:path*', "/register", "/checkout"]
+    matcher: ['/admin/:path*', "/register", "/checkout", "/orders"]
 };

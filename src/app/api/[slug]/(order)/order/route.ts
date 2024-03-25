@@ -164,7 +164,6 @@ export async function GET(request: Request) {
         }
 
         const isOrders = await getOrders(session?.user?.id)
-        // console.log('isOrders::: ', isOrders);
         for(let x in isOrders){
             console.log('isOrders[x]::: ', isOrders[x].OrderItem);
         }
