@@ -32,7 +32,6 @@ export default function Template({ children }: any) {
       <div>
         <Navbar />
         {children}
-        {status === "authenticated" && session?.user?.isAdmin && pathname.startsWith("/admin") && <Sidebar />}
         <Footer />
       </div>
       {isLoginModelOpen && <LoginModal />}

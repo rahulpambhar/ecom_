@@ -23,7 +23,6 @@ import { Categories, SubCategory, Product } from "../../../../types/global";
 import { errorToast, successToast } from "@/components/toster";
 
 const Makeupnailscard = ({ item }: { item: any; }) => {
-  console.log('item::: ', item);
   const dispatch = useAppDispatch();
   const params = useParams();
 
@@ -34,7 +33,7 @@ const Makeupnailscard = ({ item }: { item: any; }) => {
   const cart = useAppSelector((state) => state?.cartReducer?.cart?.CartItem) || [];
   const openCart = useAppSelector((state) => state?.utilReducer?.openCart);
   const categories: Categories[] = useAppSelector((state): any => state?.categories?.categories);
-  const subCategories: SubCategory[] = categories.filter((item): item is Categories => item?.name === params.sub).flatMap((category) => category?.SubCategory);
+  const subCategories: SubCategory[] = categories.filter((item): item is Categories => item?.name === params.sub).flatMap((category: any) => category?.SubCategory);
 
   const [like, setLike] = useState(false);
 

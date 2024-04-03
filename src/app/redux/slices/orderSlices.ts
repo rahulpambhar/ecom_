@@ -32,15 +32,12 @@ export const getOrdersFunc = createAsyncThunk('order/getOrdersFunc', async (_, t
     const { rejectWithValue } = thunkApiConfig;
     try {
         const response = await axios.get(`${apiUrl}/createOrder/order`,)
-        console.log('response::: ', response);
         return response.data;
     } catch (error) {
         const errorMessage = (error as Error).message || 'Unknown error occurred';
         return rejectWithValue(errorMessage);
     }
 });
-
-
 
 const initialState: any = {
     orders: [],
@@ -60,14 +57,14 @@ const orderReducer = createSlice({
 
     extraReducers: (builder) => {
         builder
-            .addCase(createOrderFunc.pending, (state) => {
+            .addCase(getOrdersFunc.pending, (state) => {
                 state.status = 'loading';
             })
-            .addCase(createOrderFunc.fulfilled, (state, action) => {
+            .addCase(getOrdersFunc.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                state.cart = action.payload?.data;
+                state.orders = action.payload?.data;
             })
-            .addCase(createOrderFunc.rejected, (state, action) => {
+            .addCase(getOrdersFunc.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.error.message ?? null;
             })

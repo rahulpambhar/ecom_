@@ -149,7 +149,7 @@ const Page = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchCategories({ page: 1, limit: 100 }));
+    dispatch(fetchCategories());
   }, [dispatch]);
 
   return (
@@ -160,7 +160,7 @@ const Page = () => {
             ? currentpage.map((item, index) => (
               <Makeupnailscard
                 key={index}
-                item={item}              
+                item={item}
               />
             ))
             : ""}

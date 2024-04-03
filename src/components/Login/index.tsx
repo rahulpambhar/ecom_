@@ -24,7 +24,7 @@ const LoginComponents = () => {
     const callbackUrl = searchParams.get("callbackUrl") || "/";
     const { data: session, } = useSession();
 
-    const loginSubmitForm = async (e) => {
+    const loginSubmitForm = async (e:any) => {
         e.preventDefault();
         try {
             setLoader(true)

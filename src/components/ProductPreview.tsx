@@ -10,11 +10,11 @@ import { errorToast, successToast } from "@/components/toster";
 import { useSession } from "next-auth/react";
 import { isLoginModel, setOpenCart } from '../app/redux/slices/utilSlice'
 
-function classNames(...classes) {
-    return classes.filter(Boolean).join(' ')
+function classNames(...classes: string[]) {
+    return classes.filter(Boolean).join(' ');
 }
 
-export default function Example({ openPreview, setOpenPreview, product }) {
+export default function Example({ openPreview, setOpenPreview, product }: any) {
     const dispatch = useAppDispatch();
 
     const { data: session, status } = useSession();
@@ -34,7 +34,7 @@ export default function Example({ openPreview, setOpenPreview, product }) {
         }
     }
 
-    const actionTocartFunction = async (item, action) => {
+    const actionTocartFunction = async (item: any, action: any) => {
         try {
             const payload = { productId: item?.productId, action }
             if (action === "remove" && item.qty === 1) {

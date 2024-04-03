@@ -8,15 +8,15 @@ import { fetchCategories } from '@/app/redux/slices/categorySlice';
 
 const Lowernav = () => {
   const dispatch = useDispatch();
-  const categories = useSelector((state) => state?.categories?.categories);
+  const categories = useSelector((state: any) => state?.categories?.categories);
 
   useEffect(() => {
-    dispatch(fetchCategories());
+    dispatch(fetchCategories())
   }, [dispatch]);
   return (
     <div className=" h-[60px] flex items-center justify-center md:justify-between md:px-[60px]">
       <div className=" flex pl-3 gap-5 md:gap-10 ">
-        {categories?.map((ele) => (
+        {categories?.map((ele: any) => (
           <button className="w-[80px] h-[30px] font-semibold md:h-[40px] md:w-[119px] uppercase md:font-bold hover:bg-black hover:text-white rounded-full"    >
             <Link href={`/catagory/${ele.name}`} className="">
               <p className="text-[var(--primary5)] text-center">
