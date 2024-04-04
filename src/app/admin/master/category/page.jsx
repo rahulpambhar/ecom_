@@ -4,7 +4,7 @@
 import Breadcrumb from "@/components/admin/breadcrumb";
 import Image from "next/image";
 import { use, useCallback, useEffect, useState } from "react";
-import { dataNotFound, } from "../../../../../public/assets"
+import { dataNotFound } from "../../../../../public/assets";
 import Loading from "@/components/admin/loading";
 import ReactPaginate from "react-paginate";
 import axios from "axios";
@@ -13,8 +13,6 @@ import { apiUrl } from "../../../../../env";
 import { successToast, errorToast } from "../../../../components/toster/index";
 // import { useDispatch, useSelector } from 'react-redux';
 // import { fetchCategories } from '../../app/redux/slices/categorySlice';
-
-
 
 export default function DashBoardPage() {
   //   const { theme } = useTheme();
@@ -32,8 +30,6 @@ export default function DashBoardPage() {
   const [currentPage, setCurrentPage] = useState(0);
   const [deleteId, setDeleteId] = useState([]);
   const [deleteToggle, setDeleteToggle] = useState(false);
-
-
 
   const addOrUpdateCatagoery = async (e) => {
     e.preventDefault();
@@ -83,36 +79,38 @@ export default function DashBoardPage() {
 
     if (indexToDelete !== -1) {
       const newArrey = deleteId.filter((item, index) => item !== data);
-      setDeleteId(newArrey)
+      setDeleteId(newArrey);
     } else {
       setDeleteId([...deleteId, data]);
-      console.log('else', deleteId);
+      console.log("else", deleteId);
     }
   };
 
   const deleteCategory = () => {
-
     try {
-      axios.delete(`${apiUrl}/admin/category`, { data: { categoryIds: deleteId } }).then((response) => {
-        if (response.data.st === true) {
-          getCategoryList();
-          successToast(response.data.msg);
-          setDeleteToggle(false);
-          setDeleteId([]);
-        } else {
-          errorToast(response.data.msg);
-        }
-      });
+      axios
+        .delete(`${apiUrl}/admin/category`, { data: { categoryIds: deleteId } })
+        .then((response) => {
+          if (response.data.st === true) {
+            getCategoryList();
+            successToast(response.data.msg);
+            setDeleteToggle(false);
+            setDeleteId([]);
+          } else {
+            errorToast(response.data.msg);
+          }
+        });
     } catch (error) {
       errorToast(error);
     }
-
   };
 
   const getCategoryList = async () => {
     setLoader(true);
     try {
-      let response = await axios.get(`${apiUrl}/admin/category?page=${page}&limit=${perPage}`);
+      let response = await axios.get(
+        `${apiUrl}/admin/category?page=${page}&limit=${perPage}`
+      );
 
       if (response?.data.data) {
         setData(response?.data?.data);
@@ -131,8 +129,7 @@ export default function DashBoardPage() {
 
   useEffect(() => {
     getCategoryList();
-  }, [perPage, page,]);
-
+  }, [perPage, page]);
 
   return (
     <div className="row">
@@ -150,8 +147,8 @@ export default function DashBoardPage() {
               fill="none"
               className="left-margin-10"
               onClick={(e) => {
-                serAddOrUpdate("add")
-                setModelToggle(true)
+                serAddOrUpdate("add");
+                setModelToggle(true);
               }}
             >
               <path
@@ -173,7 +170,7 @@ export default function DashBoardPage() {
               className="left-margin-10"
               onClick={(e) => {
                 if (deleteId.length > 0) {
-                  setDeleteToggle(true)
+                  setDeleteToggle(true);
                 } else {
                   errorToast("categorys not selected");
                 }
@@ -213,7 +210,7 @@ export default function DashBoardPage() {
                 <>
                   {data.map((item, index) => (
                     <tr key={index}>
-                      <td>{((currentPage - 1) * perPage) + (index + 1)}</td>
+                      <td>{(currentPage - 1) * perPage + (index + 1)}</td>
                       <td>{item?.name}</td>
                       <td>{item?.id}</td>
                       <td>
@@ -238,7 +235,7 @@ export default function DashBoardPage() {
                             className="btn btn-danger"
                             type="checkbox"
                             // checked={isChecked}
-                            onChange={e => handleCheckboxChange(item?.id)}
+                            onChange={(e) => handleCheckboxChange(item?.id)}
                           />
                         </div>
                       </td>
@@ -248,8 +245,8 @@ export default function DashBoardPage() {
                           className="edit-btn"
                           aria-label="i"
                           onClick={(e) => {
-                            sercategoryId(item?.id)
-                            serAddOrUpdate("update")
+                            sercategoryId(item?.id);
+                            serAddOrUpdate("update");
                             setInput({
                               ...input,
                               name: item?.name,
@@ -267,7 +264,12 @@ export default function DashBoardPage() {
                 <tr>
                   <td colSpan={6}>
                     <div className="nodata position">
-                      <Image width={100} height={100} src={dataNotFound} alt="" />
+                      <Image
+                        width={100}
+                        height={100}
+                        src={dataNotFound}
+                        alt=""
+                      />
                     </div>
                   </td>
                 </tr>
@@ -291,11 +293,27 @@ export default function DashBoardPage() {
                       nextClassName="page-item"
                       nextLinkClassName="page-link"
                       marginPagesDisplayed={2}
-                      nextLabel={<>Next <i className="fa fa-angle-double-right" aria-hidden="true"></i></>}
+                      nextLabel={
+                        <>
+                          Next{" "}
+                          <i
+                            className="fa fa-angle-double-right"
+                            aria-hidden="true"
+                          ></i>
+                        </>
+                      }
                       onPageChange={(e) => setPage(e.selected + 1)}
                       pageRangeDisplayed={5}
                       pageCount={pageCount}
-                      previousLabel={<><i className="fa fa-angle-double-left" aria-hidden="true"></i> Prev</>}
+                      previousLabel={
+                        <>
+                          <i
+                            className="fa fa-angle-double-left"
+                            aria-hidden="true"
+                          ></i>{" "}
+                          Prev
+                        </>
+                      }
                       renderOnZeroPageCount={null}
                     />
                     <select
@@ -387,11 +405,14 @@ export default function DashBoardPage() {
                         className="yellow-btn font-sz-14 float-lg-end float-sm-start"
                         disabled={isLoading}
                         onClick={(e) => {
-                          addOrUpdateCatagoery(e)
-                        }
-                        }
+                          addOrUpdateCatagoery(e);
+                        }}
                       >
-                        {isLoading ? 'Loading...' : addOrUpdate === "add" ? "Add" : 'Update'}
+                        {isLoading
+                          ? "Loading..."
+                          : addOrUpdate === "add"
+                          ? "Add"
+                          : "Update"}
                       </button>
                     </div>
                   </div>
@@ -424,7 +445,6 @@ export default function DashBoardPage() {
                 </button>
               </div>
               <div className="modal-body p-4">
-
                 <div className="row">
                   <div className="form-group mb-2 col-md-12 col-lg-6">
                     <label
@@ -441,15 +461,17 @@ export default function DashBoardPage() {
                       className="yellow-btn font-sz-14 float-lg-end float-sm-start"
                       disabled={isLoading}
                       onClick={(e) => {
-                        deleteCategory(e)
-                      }
-                      }
+                        deleteCategory(e);
+                      }}
                     >
-                      {isLoading ? 'Loading...' : addOrUpdate === "add" ? "Add" : 'Update'}
+                      {isLoading
+                        ? "Loading..."
+                        : addOrUpdate === "add"
+                        ? "Add"
+                        : "Update"}
                     </button>
                   </div>
                 </div>
-
               </div>
             </div>
           </div>
