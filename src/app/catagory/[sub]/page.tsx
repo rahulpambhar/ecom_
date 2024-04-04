@@ -1,11 +1,10 @@
-
-'use client';
+"use client";
 import Link from "next/link";
-import { useEffect, useState } from 'react';
-import { useAppSelector, useAppDispatch } from '../../redux/hooks';
-import { fetchCategories } from '../../redux/slices/categorySlice';
-import { useParams } from 'next/navigation'
-import CategoryCard from '../../../components/frontside/CategoryCard';
+import { useEffect, useState } from "react";
+import { useAppSelector, useAppDispatch } from "../../redux/hooks";
+import { fetchCategories } from "../../redux/slices/categorySlice";
+import { useParams } from "next/navigation";
+import CategoryCard from "../../../components/frontside/CategoryCard";
 import { Categories, SubCategory } from "../../../../types/global";
 import Breadcrumb from "@/components/admin/breadcrumb";
 
@@ -124,7 +123,9 @@ const Topselectionitem = [
 const Page = () => {
   const params = useParams();
   const dispatch = useAppDispatch();
-  const products: any[] = useAppSelector((state): any => state?.categories?.products);
+  const products: any[] = useAppSelector(
+    (state): any => state?.categories?.products
+  );
   const [currentPage, setCurrentPage] = useState(1);
   const [postPerPage, setPostPerPage] = useState(12);
 
@@ -158,11 +159,8 @@ const Page = () => {
         <div className=" grid grid-cols-1 md:grid-cols-2  lg:grid-cols-4 pt-5  justify-center items-center">
           {products.length > 0
             ? currentpage.map((item, index) => (
-              <Makeupnailscard
-                key={index}
-                item={item}              
-              />
-            ))
+                <Makeupnailscard key={index} item={item} />
+              ))
             : ""}
         </div>
         <div className="flex mt-10 justify-center items-center border-t-2">
@@ -181,13 +179,19 @@ const Page = () => {
               const isWithinRange =
                 num >= currentPage - 1 && num <= currentPage + 1;
 
-              if (isWithinRange || isCurrentPage || num === 1 || num === nopage) {
+              if (
+                isWithinRange ||
+                isCurrentPage ||
+                num === 1 ||
+                num === nopage
+              ) {
                 return (
                   <div
                     key={num}
                     onClick={() => paginate(num)}
-                    className={`flex justify-center items-center w-8 h-8 rounded-full hover:bg-black hover:text-white ${isCurrentPage ? "bg-black  text-white" : ""
-                      }`}
+                    className={`flex justify-center items-center w-8 h-8 rounded-full hover:bg-black hover:text-white ${
+                      isCurrentPage ? "bg-black  text-white" : ""
+                    }`}
                   >
                     {num}
                   </div>
@@ -197,8 +201,10 @@ const Page = () => {
             })}
           </div>
           <button>
-            <span className="text-lg font-bold roboto uppercase bg-[#ece7e7] w-[320px] py-6 flex justify-center items-center"
-              onClick={() => nextpage()}            >
+            <span
+              className="text-lg font-bold roboto uppercase bg-[#ece7e7] w-[320px] py-6 flex justify-center items-center"
+              onClick={() => nextpage()}
+            >
               Next
             </span>
           </button>
