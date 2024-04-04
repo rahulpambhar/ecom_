@@ -150,7 +150,7 @@ const Page = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchCategories({ page: 1, limit: 100 }));
+    dispatch(fetchCategories());
   }, [dispatch]);
 
   return (

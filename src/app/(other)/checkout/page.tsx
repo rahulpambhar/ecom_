@@ -8,7 +8,11 @@ import { createTempOrderFunc, createOrderFunc } from '../../redux/slices/orderSl
 import { useSession } from "next-auth/react";
 import { toast } from "react-hot-toast"
 import { errorToast, successToast } from '@/components/toster';
+// import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js'
+
+import axios from 'axios';
 // import { successToast, errorToast } from './toster';
+import paypal from 'paypal-rest-sdk';
 
 export default function Checkout() {
     const { data: session, status }: any = useSession();
@@ -23,7 +27,7 @@ export default function Checkout() {
             router.push('/')
         }
         setSubTotal(
-            cartItem.reduce((acc, item) => {
+            cartItem.reduce((acc: any, item: any) => {
                 return acc + (item.product.price * item.qty);
             }, 0)
         );
@@ -37,7 +41,7 @@ export default function Checkout() {
                             <h3 className="text-lg font-semibold">Order Summary</h3>
                         </div>
                         <div className="border-t border-gray-200 dark:border-gray-800">
-                            {cartItem.map((item, i) => (
+                            {cartItem.map((item: any, i: number) => (
                                 <div key={i} className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-800">
                                     <div className="flex items-center space-x-4">
                                         <div className="w-16 h-16 rounded-md overflow-hidden">
@@ -89,6 +93,7 @@ export default function Checkout() {
                                         </label>
                                         <input className="input" id="card" placeholder="Enter your card number" type="password" />
                                     </div>
+
                                     <div className="flex gap-4">
                                         <div className="grid gap-2">
                                             <label className="font-medium" htmlFor="expiry">
@@ -109,16 +114,20 @@ export default function Checkout() {
                         {
                             session &&
                             <button onClick={async () => {
+
                                 const tempData = await dispatch(createTempOrderFunc())
                                 if (tempData?.payload.st) {
                                     successToast("fgn")
 
-                                    const data = await dispatch(createOrderFunc(tempData?.payload.temOrdrId))
-                                    if (data?.payload.st) {
-                                        successToast(data?.payload.msg)
-                                    } else {
-                                        errorToast(data.payload.msg)
-                                    }
+
+                                    // const data = await dispatch(createOrderFunc(tempData?.payload.temOrdrId))
+                                    const data = await dispatch(createOrderFunc())
+                                    console.log('data::: ', data);
+                                    // if (data?.payload.st) {
+                                    //     successToast(data?.payload.msg)
+                                    // } else {
+                                    //     errorToast(data.payload.msg)
+                                    // }
                                 } else {
                                     errorToast(tempData.payload.msg)
                                 }

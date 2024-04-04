@@ -14,7 +14,7 @@ import { successToast, errorToast } from "../../../../components/toster/index";
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCategories } from '../../../redux/slices/categorySlice';
 import Select from 'react-select';
-import { ProductsData } from "@/components/frontside/DummyData";
+// import { ProductsData } from "@/components/frontside/DummyData";
 
 
 export default function BuyHistory() {
@@ -455,7 +455,7 @@ export default function BuyHistory() {
                                                         onClick={(e) => {
                                                             const { name, batchNo, uid, price, discountedPrice, discount, brand, countInStock, description, image, video, categoryId, subCategoryId } = item
                                                             setAddProductData({
-                                                                ...ProductsData,
+                                                                // ...ProductsData,
                                                                 name,
                                                                 batchNo,
                                                                 uid,

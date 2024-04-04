@@ -54,7 +54,7 @@ const authOptions: NextAuthOptions = {
 
             return { ...session, user: token };
         },
-        async jwt({ token, user }): Promise<any> {
+        async jwt({ token, user }: any): Promise<any> {
             const userInfo = await prisma.user.findFirst({
                 where: {
                     email: token.email

@@ -34,6 +34,9 @@ const Uppernav = () => {
         </div>
         <div className=" relative flex gap-3 lg:gap-5">
           <Image src={"/image/heart.svg"} alt="" width={28} height={100} />
+          <div className="absolute -top-2 right-9  bg-white rounded-full px-2">
+            {cart && cart?.CartItem?.length}
+          </div>
           <Image src={"/image/ShoppingCartSimple.svg"} alt="" width={28} height={50}
             onClick={() => {
               if (!session) {
@@ -43,10 +46,9 @@ const Uppernav = () => {
               dispatch(setOpenCart(!openCart))
             }}
           />
-          <div className="absolute -top-2 right-9  bg-white rounded-full px-2">
-            {cart && cart?.CartItem?.length}
-          </div>
-          <Image src={"/image/UserCircle.svg"} alt="" width={28} height={100} />
+          <Link href="/profile">
+            <Image src={"/image/UserCircle.svg"} alt="" width={28} height={100} />
+          </Link>
           <div className="text-light">
             {session ? (
               <>

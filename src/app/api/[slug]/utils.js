@@ -105,7 +105,11 @@ export async function getOrders(id) {
         include: {
             OrderItem: {
                 include: {
-                    product: true,
+                    product: {
+                        where: {
+                            isBlocked: false
+                        }
+                    },
                 }
             }
         }

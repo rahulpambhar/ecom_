@@ -13,7 +13,7 @@ const initialState: any = {
     error: null,
     status: 'idle',
 };
-export const fetchCategories = createAsyncThunk('categories/fetchCategories', async () => {
+export const fetchCategories: any = createAsyncThunk('categories/fetchCategories', async () => {
     try {
         const page = 1
         const limit = 100
@@ -54,7 +54,7 @@ const categoriesReducer = createSlice({
                 }
 
                 state.categories = categories
-                
+
                 for (let x in state.categories) {
                     if (state.categories[x].SubCategory.length > 0) {
                         for (let y in state.categories[x].SubCategory) {

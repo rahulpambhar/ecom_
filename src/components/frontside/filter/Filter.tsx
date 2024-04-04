@@ -29,13 +29,13 @@ const Filter = React.memo(() => {
     }
   }, [categories, params.sub]);
 
-  const handleChange = (e) => {
-    const product = productsList.filter((item: any) => item.subCategoryId === e.value);
+  const handleChange = (e: any) => {
+    const product: any = productsList.filter((item: any) => item.subCategoryId === e.value);
     dispatch(setProducts(product));
   };
 
   useEffect(() => {
-    const product = productsList.filter((item: any) => item.subCategoryId === filteredOptions[0]?.value);
+    const product: any = productsList.filter((item: any) => item.subCategoryId === filteredOptions[0]?.value);
     dispatch(setProducts(product));
   }, [filteredOptions]);
 
