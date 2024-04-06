@@ -20,7 +20,7 @@ export default function Template({ children }: any) {
         <Sidebar />
       </div>
       <div className=" flex-grow">
-        <div className="md:h-[calc(100vh-1px)] overflow-y-scroll hide-scrollbar px-4  bg-red-300">
+        <div className="md:h-[calc(100vh-1px)] overflow-y-scroll scrollbar-remove px-4  bg-red-300">
           {children}
         </div>
       </div>

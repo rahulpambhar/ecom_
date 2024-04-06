@@ -2,7 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-
+.scrollbar-remove::-webkit-scrollbar {
+  @apply w-0;
+}
+body::-webkit-scrollbar {
+  @apply w-0;
+}
 
 :root {
   --foreground-rgb: 0, 0, 0;

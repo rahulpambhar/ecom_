@@ -135,68 +135,124 @@ export default function DashBoardPage() {
     <div className="row">
       <div className="col-lg-12 col-md-12 col-xl-12 col-xxl-12">
         {/* <Breadcrumb /> */}
-        <div className="filter-section position">
-          <div className="filter-title font-sz-14 font-family">Category</div>
-          <button type="button" className="filter-btn">
-            Add
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 20 20"
-              fill="none"
-              className="left-margin-10"
-              onClick={(e) => {
-                serAddOrUpdate("add");
-                setModelToggle(true);
-              }}
-            >
-              <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M4.375 2.5H3.125V8.75H4.375V2.5ZM12 8.75H8L7.5 8.0625V6.8125L8 6.25H12L12.5 6.875V8.125L12 8.75ZM5.75 12.5H1.75L1.25 11.875V10.625L1.75 10H5.75L6.25 10.625V11.875L5.75 12.5ZM10.625 2.5H9.375V5H10.625V2.5ZM9.375 10H10.625V17.5H9.375V10ZM4.375 13.75H3.125V17.5H4.375V13.75ZM14.25 13.75H18.2375L18.7375 13.125V11.9375L18.2375 11.3125H14.25L13.75 11.9375V13.125L14.25 13.75ZM16.875 2.5H15.625V10H16.875V2.5ZM15.625 15H16.875V17.5H15.625V15Z"
-                fill="#CEA666"
-              />
-            </svg>
-          </button>
-          <button type="button" className="filter-btn">
-            Delete Multiple
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 20 20"
-              fill="none"
-              className="left-margin-10"
-              onClick={(e) => {
-                if (deleteId.length > 0) {
-                  setDeleteToggle(true);
-                } else {
-                  errorToast("categorys not selected");
-                }
-              }}
-            >
-              <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M4.375 2.5H3.125V8.75H4.375V2.5ZM12 8.75H8L7.5 8.0625V6.8125L8 6.25H12L12.5 6.875V8.125L12 8.75ZM5.75 12.5H1.75L1.25 11.875V10.625L1.75 10H5.75L6.25 10.625V11.875L5.75 12.5ZM10.625 2.5H9.375V5H10.625V2.5ZM9.375 10H10.625V17.5H9.375V10ZM4.375 13.75H3.125V17.5H4.375V13.75ZM14.25 13.75H18.2375L18.7375 13.125V11.9375L18.2375 11.3125H14.25L13.75 11.9375V13.125L14.25 13.75ZM16.875 2.5H15.625V10H16.875V2.5ZM15.625 15H16.875V17.5H15.625V15Z"
-                fill="#CEA666"
-              />
-            </svg>
-          </button>
+        <div className="filter-section position flex justify-between items-center py-5">
+          <div className="flex gap-5 filter-title font-sz-14 font-family">
+            <p>Category</p>
+            <div>
+              {" "}
+              <select
+                value={perPage}
+                onChange={(e) => setPerPage(Number(e.target.value))}
+              >
+                <option value={5}>5 per page</option>
+                <option value={10}>10 per page</option>
+                <option value={20}>20 per page</option>
+              </select>
+            </div>
+          </div>
+          <div className="flex gap-5">
+            {" "}
+            <button type="button" className="filter-btn flex gap-1">
+              Add
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+                className="left-margin-10"
+                onClick={(e) => {
+                  serAddOrUpdate("add");
+                  setModelToggle(true);
+                }}
+              >
+                <path
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                  d="M4.375 2.5H3.125V8.75H4.375V2.5ZM12 8.75H8L7.5 8.0625V6.8125L8 6.25H12L12.5 6.875V8.125L12 8.75ZM5.75 12.5H1.75L1.25 11.875V10.625L1.75 10H5.75L6.25 10.625V11.875L5.75 12.5ZM10.625 2.5H9.375V5H10.625V2.5ZM9.375 10H10.625V17.5H9.375V10ZM4.375 13.75H3.125V17.5H4.375V13.75ZM14.25 13.75H18.2375L18.7375 13.125V11.9375L18.2375 11.3125H14.25L13.75 11.9375V13.125L14.25 13.75ZM16.875 2.5H15.625V10H16.875V2.5ZM15.625 15H16.875V17.5H15.625V15Z"
+                  fill="#CEA666"
+                />
+              </svg>
+            </button>
+            <button type="button" className="filter-btn flex gap-1">
+              Delete Multiple
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+                className="left-margin-10"
+                onClick={(e) => {
+                  if (deleteId.length > 0) {
+                    setDeleteToggle(true);
+                  } else {
+                    errorToast("categorys not selected");
+                  }
+                }}
+              >
+                <path
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                  d="M4.375 2.5H3.125V8.75H4.375V2.5ZM12 8.75H8L7.5 8.0625V6.8125L8 6.25H12L12.5 6.875V8.125L12 8.75ZM5.75 12.5H1.75L1.25 11.875V10.625L1.75 10H5.75L6.25 10.625V11.875L5.75 12.5ZM10.625 2.5H9.375V5H10.625V2.5ZM9.375 10H10.625V17.5H9.375V10ZM4.375 13.75H3.125V17.5H4.375V13.75ZM14.25 13.75H18.2375L18.7375 13.125V11.9375L18.2375 11.3125H14.25L13.75 11.9375V13.125L14.25 13.75ZM16.875 2.5H15.625V10H16.875V2.5ZM15.625 15H16.875V17.5H15.625V15Z"
+                  fill="#CEA666"
+                />
+              </svg>
+            </button>
+          </div>
         </div>
         <div className="table-section position mb-4">
           <table className="table w-100 mb-0">
             <thead>
               <tr>
-                <th scope="col">NO</th>
-                <th scope="col">Name</th>
-                <th scope="col">CategoryId</th>
-                <th scope="col">image</th>
-                <th scope="col">createdAt</th>
-                <th scope="col">updatedAt</th>
-                <th scope="col">Delete</th>
-                <th scope="col">Update</th>
+                <th
+                  className="family px-6 py-3 text-start text-[--text-color] text-font12 whitespace-nowrap font-bold uppercase"
+                  scope="col"
+                >
+                  NO
+                </th>
+                <th
+                  className="family px-6 py-3 text-start text-[--text-color] text-font12 whitespace-nowrap font-bold uppercase"
+                  scope="col"
+                >
+                  Name
+                </th>
+                <th
+                  className="family px-6 py-3 text-start text-[--text-color] text-font12 whitespace-nowrap font-bold uppercase"
+                  scope="col"
+                >
+                  CategoryId
+                </th>
+                <th
+                  className="family px-6 py-3 text-start text-[--text-color] text-font12 whitespace-nowrap font-bold uppercase"
+                  scope="col"
+                >
+                  image
+                </th>
+                <th
+                  className="family px-6 py-3 text-start text-[--text-color] text-font12 whitespace-nowrap font-bold uppercase"
+                  scope="col"
+                >
+                  createdAt
+                </th>
+                <th
+                  className="family px-6 py-3 text-start text-[--text-color] text-font12 whitespace-nowrap font-bold uppercase"
+                  scope="col"
+                >
+                  updatedAt
+                </th>
+                <th
+                  className="family px-6 py-3 text-start text-[--text-color] text-font12 whitespace-nowrap font-bold uppercase"
+                  scope="col"
+                >
+                  Delete
+                </th>
+                <th
+                  className="family px-6 py-3 text-start text-[--text-color] text-font12 whitespace-nowrap font-bold uppercase"
+                  scope="col"
+                >
+                  Update
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -210,10 +266,16 @@ export default function DashBoardPage() {
                 <>
                   {data.map((item, index) => (
                     <tr key={index}>
-                      <td>{(currentPage - 1) * perPage + (index + 1)}</td>
-                      <td>{item?.name}</td>
-                      <td>{item?.id}</td>
-                      <td>
+                      <td className="family px-6 py-3 whitespace-nowrap text-font10 border-1 border-[--border] font-normal text-[--text-color] text-center">
+                        {(currentPage - 1) * perPage + (index + 1)}
+                      </td>
+                      <td className="family px-6 py-3 whitespace-nowrap text-font10 border-1 border-[--border] font-normal text-[--text-color] text-center">
+                        {item?.name}
+                      </td>
+                      <td className="family px-6 py-3 whitespace-nowrap text-font10 border-1 border-[--border] font-normal text-[--text-color] text-center">
+                        {item?.id}
+                      </td>
+                      <td className="family px-6 py-3 whitespace-nowrap text-font10 border-1 border-[--border] font-normal text-[--text-color] text-center">
                         <Image
                           className="small-img"
                           width={100}
@@ -222,14 +284,14 @@ export default function DashBoardPage() {
                           alt=""
                         />
                       </td>
-                      <td>
+                      <td className="family px-6 py-3 whitespace-nowrap text-font10 border-1 border-[--border] font-normal text-[--text-color] text-center">
                         {moment(item?.createdAt).format("DD-MM-YYYY HH:mm:ss")}
                       </td>
-                      <td>
+                      <td className="family px-6 py-3 whitespace-nowrap text-font10 border-1 border-[--border] font-normal text-[--text-color] text-center">
                         {" "}
                         {moment(item?.updatedAt).format("DD-MM-YYYY HH:mm:ss")}
                       </td>
-                      <td>
+                      <td className="family px-6 py-3 whitespace-nowrap text-font10 border-1 border-[--border] font-normal text-[--text-color] text-center">
                         <div>
                           <input
                             className="btn btn-danger"
@@ -239,7 +301,7 @@ export default function DashBoardPage() {
                           />
                         </div>
                       </td>
-                      <td>
+                      <td className="family px-6 py-3 whitespace-nowrap text-font10 border-1 border-[--border] font-normal text-[--text-color] text-center">
                         <button
                           type="button"
                           className="edit-btn"
@@ -285,7 +347,7 @@ export default function DashBoardPage() {
                       breakLabel="..."
                       breakClassName="page-item"
                       breakLinkClassName="page-link"
-                      containerClassName="pagination justify-content-center"
+                      containerClassName="pagination flex gap-5  justify-content-center justify-end"
                       pageClassName="page-item"
                       pageLinkClassName="page-link"
                       previousClassName="page-item"
@@ -316,14 +378,6 @@ export default function DashBoardPage() {
                       }
                       renderOnZeroPageCount={null}
                     />
-                    <select
-                      value={perPage}
-                      onChange={(e) => setPerPage(Number(e.target.value))}
-                    >
-                      <option value={5}>5 per page</option>
-                      <option value={10}>10 per page</option>
-                      <option value={20}>20 per page</option>
-                    </select>
                   </nav>
                 </div>
               </div>
