@@ -476,7 +476,190 @@ export default function DashBoardPage() {
           </div>
         </div>
 
-        <div
+        <div>
+          <div>
+            {" "}
+            {modelToggle && (
+              <div className=" overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-0rem)] max-h-full flex bg-black/50 transition-opacity duration-700 ">
+                <div className="relative p-4 w-full max-w-[550px] max-h-full">
+                  <div className="relative bg-white rounded-md shadow dark:bg-gray-700">
+                    <div className="flex items-center justify-between p-4 md:p-5 rounded-t dark:border-gray-600">
+                      <h3 className="text-font18 font-semibold text-[--text-color family capitalize">
+                        HSN/ SAC Master
+                      </h3>
+                    </div>
+
+                    <div className="p-4 md:p-5 modelshado m-4 mt-0 rounded-md rounded-b-none">
+                      {/* <Formik
+                        initialValues={initialValues}
+                        validationSchema={hsnSchema}
+                        onSubmit={async (values, actions) => {
+                          try {
+                            let formdata = new FormData();
+                            formdata.append("platform", "WEB");
+                            if (id !== 0) {
+                              formdata.append("hsn_id", id);
+                            }
+                            formdata.append("code", values.code);
+                            formdata.append("rate", values.rate);
+                            formdata.append("description ", values.description);
+                            let result = await axios.post(
+                              Base_url + "iNeHSN",
+                              formdata,
+                              {
+                                headers: {
+                                  "Content-Type": "multipart/form-data",
+                                  Authorization: `Bearer ${session.user.data.token.access}`,
+                                },
+                              }
+                            );
+
+                            if (result.data.message === "success") {
+                              toast.success("Successfully");
+                              shsnModal(false);
+                              setReload(result);
+                            } else if (
+                              result.data.message === "HSN Code Already Exist"
+                            ) {
+                              toast.error("HSN Code Already Exist "); // Change from toast.success() to toast.error()
+                            } else {
+                              toast.error("HSN Code Already Exist");
+                            }
+                          } catch (error) {
+                            console.error("Error:", error);
+                          }
+                        }}
+                      >
+                        {({ errors, touched }) => (
+                          <Form className="max-w-sm mx-auto">
+                            <Input
+                              labelName="HSN/ SAC code"
+                              inputName="code"
+                              type="number"
+                              errors={errors.code}
+                              touched={touched.code}
+                              star={true}
+                            />
+                            <Input
+                              labelName="Tax rate (%)"
+                              inputName="rate"
+                              type="number"
+                              errors={errors.rate}
+                              touched={touched.rate}
+                              star={true}
+                            />
+                            <Textarea
+                              labelName="Description"
+                              inputName="description"
+                            />
+                            <div className="gap-4 flex justify-center">
+                              <button
+                                type="button"
+                                className="buttonUtils !font-medium !w-auto family"
+                                onClick={() => {
+                                  shsnModal(!close);
+                                }}
+                              >
+                                cancel
+                              </button>
+                              <button
+                                type="submit"
+                                className="buttonUtils !font-medium !w-auto family"
+                              >
+                                Submit
+                              </button>
+                            </div>
+                          </Form>
+                        )}
+                      </Formik> */}
+                      {/* <div className="modal-body p-4">
+                        <form method="post">
+                          <div className="row">
+                            <div className="form-group mb-2 col-md-12 col-lg-6">
+                              <label
+                                htmlFor="inputName"
+                                className="font-sz-12 font-family mb-2"
+                              >
+                                category name
+                              </label>
+                              <input
+                                value={input?.name ? input?.name : ""}
+                                type="text"
+                                className="form-control font-sz-14"
+                                id="inputName"
+                                placeholder="Name"
+                                name="name"
+                                onChange={(e) => {
+                                  setInput({
+                                    ...input,
+                                    [e.target.name]: e.target.value,
+                                  });
+                                }}
+                              />
+                            </div>
+                            <div className="form-group mb-2 col-md-12 col-lg-6">
+                              <label
+                                htmlFor="inputPhone"
+                                className="font-sz-12 font-family mb-2"
+                              >
+                                image
+                              </label>
+                              <input
+                                type="file"
+                                className="form-control font-sz-14"
+                                id="inputPhone"
+                                name="file"
+                                onChange={(e) => {
+                                  setImage(e.target.files[0]);
+                                }}
+                              />
+                            </div>
+
+                            <div className="form-group txt-center mt-3 col-md-12 col-lg-12">
+                              <button
+                                type="submit"
+                                className="yellow-btn font-sz-14 float-lg-end float-sm-start"
+                                disabled={isLoading}
+                                onClick={(e) => {
+                                  addOrUpdateCatagoery(e);
+                                }}
+                              >
+                                {isLoading
+                                  ? "Loading..."
+                                  : addOrUpdate === "add"
+                                  ? "Add"
+                                  : "Update"}
+                              </button>
+                            </div>
+                          </div>
+                        </form>
+                      </div> */}
+                      <div className="gap-4 flex justify-center">
+                        <button
+                          type="button"
+                          className="buttonUtils !font-medium !w-auto family"
+                          onClick={() => {
+                            setModelToggle(!modelToggle);
+                          }}
+                        >
+                          cancel
+                        </button>
+                        <button
+                          type="submit"
+                          className="buttonUtils !font-medium !w-auto family"
+                        >
+                          Submit
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* <div
           className={deleteToggle ? "modal fade show " : "modal fade"}
           style={{ display: deleteToggle ? "block" : "" }}
         >
@@ -529,7 +712,7 @@ export default function DashBoardPage() {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
