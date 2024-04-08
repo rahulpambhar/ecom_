@@ -152,7 +152,14 @@ export default function DashBoardPage() {
           </div>
           <div className="flex gap-5">
             {" "}
-            <button type="button" className="filter-btn flex gap-1">
+            <button
+              type="button"
+              className="filter-btn flex gap-1"
+              onClick={(e) => {
+                setModelToggle(true);
+                serAddOrUpdate("add");
+              }}
+            >
               Add
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -161,10 +168,6 @@ export default function DashBoardPage() {
                 viewBox="0 0 20 20"
                 fill="none"
                 className="left-margin-10"
-                onClick={(e) => {
-                  serAddOrUpdate("add");
-                  setModelToggle(true);
-                }}
               >
                 <path
                   fillRule="evenodd"
@@ -572,7 +575,7 @@ export default function DashBoardPage() {
                           </Form>
                         )}
                       </Formik> */}
-                      {/* <div className="modal-body p-4">
+                      <div className="modal-body p-4">
                         <form method="post">
                           <div className="row">
                             <div className="form-group mb-2 col-md-12 col-lg-6">
@@ -633,7 +636,7 @@ export default function DashBoardPage() {
                             </div>
                           </div>
                         </form>
-                      </div> */}
+                      </div>
                       <div className="gap-4 flex justify-center">
                         <button
                           type="button"
