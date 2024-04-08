@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { apiUrl } from "../../../../env"
-import { CategoriesState } from "../../../../types/global";
 
 
 const initialState: any = {

@@ -17,7 +17,7 @@ export const createTempOrderFunc = createAsyncThunk('order/creteTempOrder', asyn
     }
 });
 
-export const createOrderFunc = createAsyncThunk('order/creteOrder', async (tempId, thunkApiConfig: ThunkApiConfig) => {
+export const createOrderFunc = createAsyncThunk('order/creteOrder', async (tempId: any, thunkApiConfig: ThunkApiConfig) => {
     const { rejectWithValue } = thunkApiConfig;
     try {
         const response = await axios.post(`${apiUrl}/createOrder/order`, { tempId })
@@ -32,6 +32,7 @@ export const getOrdersFunc = createAsyncThunk('order/getOrdersFunc', async (_, t
     const { rejectWithValue } = thunkApiConfig;
     try {
         const response = await axios.get(`${apiUrl}/createOrder/order`,)
+        console.log('response::: ', response);
         return response.data;
     } catch (error) {
         const errorMessage = (error as Error).message || 'Unknown error occurred';

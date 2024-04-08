@@ -1,37 +1,50 @@
 "use client";
 
 import { Fragment, useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { RedirectType, useRouter, useSearchParams } from 'next/navigation'
 import { useAppSelector, useAppDispatch } from '../../redux/hooks';
-// import { isLoginModel, setOpenCart } from '../app/redux/slices/utilSlice'
-import { createTempOrderFunc, createOrderFunc } from '../../redux/slices/orderSlices';
+import { createTempOrderFunc, createOrderFunc, getOrdersFunc } from '../../redux/slices/orderSlices';
 import { useSession } from "next-auth/react";
-import { toast } from "react-hot-toast"
 import { errorToast, successToast } from '@/components/toster';
-// import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js'
-
 import axios from 'axios';
-// import { successToast, errorToast } from './toster';
-import paypal from 'paypal-rest-sdk';
+import ProductPreview from "@/components/ProductPreview";
+import { Product } from '../../../../types/global';
+
 
 export default function Checkout() {
     const { data: session, status }: any = useSession();
     let [subTotal, setSubTotal] = useState(0)
+    const [openPreview, setOpenPreview] = useState(false);
+    const [priview, sePriview] = useState < Product > ({} as Product)
+    let [order, setOrder] = useState([])
     const dispatch = useAppDispatch();
+    const searchParams = useSearchParams()
+    const orderID = searchParams.get('orderID')
     const router = useRouter()
-    const openCart = useAppSelector((state) => state?.utilReducer?.openCart);
     const cartItem = useAppSelector((state) => state?.cartReducer?.cart?.CartItem) || [];
+    const getOrders = async () => await dispatch(getOrdersFunc())
+    const orders: any[] = useAppSelector((state) => state?.orderReducer?.orders);
 
     useEffect(() => {
-        if (!session) {
-            router.push('/')
+        !session ? () => { return router.push('/') } : null
+        getOrders()
+        if (orderID) {
+            const order_: any = orders.find((order) => order.id === orderID)
+            setSubTotal(
+                order_?.OrderItem.reduce((acc: any, item: any) => {
+                    return acc + (item.price * item.qty);
+                }, 0)
+            );
+            setOrder(order_?.OrderItem)
+        } else {
+            setSubTotal(
+                cartItem.reduce((acc: any, item: any) => {
+                    return acc + (item.product.price * item.qty);
+                }, 0)
+            );
         }
-        setSubTotal(
-            cartItem.reduce((acc: any, item: any) => {
-                return acc + (item.product.price * item.qty);
-            }, 0)
-        );
-    }, [cartItem, session])
+    }, [orderID, cartItem])
+
     return (
         <div className="flex flex-col min-h-screen py-12 md:py-24 items-center justify-start space-y-4">
             <div className="w-full max-w-2xl px-4">
@@ -41,20 +54,39 @@ export default function Checkout() {
                             <h3 className="text-lg font-semibold">Order Summary</h3>
                         </div>
                         <div className="border-t border-gray-200 dark:border-gray-800">
-                            {cartItem.map((item: any, i: number) => (
-                                <div key={i} className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-800">
+                            {orderID ? order?.map((item: any, i: number) => (
+                                <div key={i} onClick={() => {
+                                    sePriview(item)
+                                    setOpenPreview(!openPreview)
+                                }} className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-800">
                                     <div className="flex items-center space-x-4">
                                         <div className="w-16 h-16 rounded-md overflow-hidden">
                                             <img alt="Product image" className="object-cover w-full h-full" src="/placeholder.svg" />
                                         </div>
                                         <div className="text-sm">
-                                            <div className="font-medium">{item?.product?.name}</div>
-                                            <div className="text-gray-500 dark:text-gray-400">$60.00 x 2</div>
+                                            <div className="font-medium">{item?.name}</div>
+                                            <div className="text-gray-500 dark:text-gray-400">${item?.price} x {item?.qty}</div>
                                         </div>
                                     </div>
-                                    <div className="font-medium">${item?.product?.price}</div>
+                                    <div className="font-medium">${item?.price}</div>
                                 </div>
-                            ))}
+                            ))
+                                :
+                                cartItem?.map((item: any, i: number) => (
+                                    <div key={i} className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-800">
+                                        <div className="flex items-center space-x-4">
+                                            <div className="w-16 h-16 rounded-md overflow-hidden">
+                                                <img alt="Product image" className="object-cover w-full h-full" src="/placeholder.svg" />
+                                            </div>
+                                            <div className="text-sm">
+                                                <div className="font-medium">{item?.product?.name}</div>
+                                                <div className="text-gray-500 dark:text-gray-400">${item?.product?.price} x {item?.product?.qty}</div>
+                                            </div>
+                                        </div>
+                                        <div className="font-medium">${item?.product?.price}</div>
+                                    </div>
+                                ))
+                            }
                             <div className="flex items-center justify-between p-4">
                                 <div>Subtotal</div>
                                 <div>${subTotal}</div>
@@ -117,28 +149,23 @@ export default function Checkout() {
 
                                 const tempData = await dispatch(createTempOrderFunc())
                                 if (tempData?.payload.st) {
-                                    successToast("fgn")
+                                    successToast("Temp order done!")
+                                    const data: any = await dispatch(createOrderFunc(tempData?.payload.temOrdrId))
 
+                                    data?.payload.st ? successToast(data?.payload.msg) : errorToast(data?.payload.msg)
 
-                                    // const data = await dispatch(createOrderFunc(tempData?.payload.temOrdrId))
-                                    const data = await dispatch(createOrderFunc())
-                                    console.log('data::: ', data);
-                                    // if (data?.payload.st) {
-                                    //     successToast(data?.payload.msg)
-                                    // } else {
-                                    //     errorToast(data.payload.msg)
-                                    // }
                                 } else {
                                     errorToast(tempData.payload.msg)
                                 }
                             }
                             } className="w-full max-w-xs ml-auto bg-gray-900 text-white py-2 rounded-md shadow-md hover:bg-gray-800 focus:outline-none focus:ring focus:ring-gray-900">
-                                Place Order
+                                {orderID ? "Repeat Order" : "Place Order"}
                             </button>
                         }
                     </div>
                 </div>
             </div>
+            <ProductPreview openPreview={openPreview} setOpenPreview={setOpenPreview} product={priview} />
         </div>
     );
 };

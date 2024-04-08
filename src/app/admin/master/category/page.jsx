@@ -186,7 +186,7 @@ export default function DashBoardPage() {
           </button>
         </div>
         <div className="table-section position mb-4">
-          <table className="table w-100 mb-0">
+          <table className="table w-full mb-0">
             <thead>
               <tr>
                 <th scope="col">NO</th>
@@ -202,8 +202,8 @@ export default function DashBoardPage() {
             <tbody>
               {loader ? (
                 <tr>
-                  <td colSpan={6}>
-                    <Loading />{" "}
+                  <td colSpan={6} className="text-center">
+                    <Loading />
                   </td>
                 </tr>
               ) : data.length > 0 ? (
@@ -222,13 +222,8 @@ export default function DashBoardPage() {
                           alt=""
                         />
                       </td>
-                      <td>
-                        {moment(item?.createdAt).format("DD-MM-YYYY HH:mm:ss")}
-                      </td>
-                      <td>
-                        {" "}
-                        {moment(item?.updatedAt).format("DD-MM-YYYY HH:mm:ss")}
-                      </td>
+                      <td>{moment(item?.createdAt).format("DD-MM-YYYY HH:mm:ss")}</td>
+                      <td>{moment(item?.updatedAt).format("DD-MM-YYYY HH:mm:ss")}</td>
                       <td>
                         <div>
                           <input
@@ -262,8 +257,8 @@ export default function DashBoardPage() {
                 </>
               ) : (
                 <tr>
-                  <td colSpan={6}>
-                    <div className="nodata position">
+                  <td colSpan={6} className="text-center">
+                    <div className="nodata">
                       <Image
                         width={100}
                         height={100}
@@ -276,60 +271,54 @@ export default function DashBoardPage() {
               )}
             </tbody>
           </table>
-          <div className="row">
-            <div className="col-lg-12 col-md-12 col-xl-12 col-sm-12">
-              <div id="pagination" className="mt-3">
-                <div className="pagination-list">
-                  <nav aria-label="Page navigation example">
-                    <ReactPaginate
-                      breakLabel="..."
-                      breakClassName="page-item"
-                      breakLinkClassName="page-link"
-                      containerClassName="pagination justify-content-center"
-                      pageClassName="page-item"
-                      pageLinkClassName="page-link"
-                      previousClassName="page-item"
-                      previousLinkClassName="page-link"
-                      nextClassName="page-item"
-                      nextLinkClassName="page-link"
-                      marginPagesDisplayed={2}
-                      nextLabel={
-                        <>
-                          Next{" "}
-                          <i
-                            className="fa fa-angle-double-right"
-                            aria-hidden="true"
-                          ></i>
-                        </>
-                      }
-                      onPageChange={(e) => setPage(e.selected + 1)}
-                      pageRangeDisplayed={5}
-                      pageCount={pageCount}
-                      previousLabel={
-                        <>
-                          <i
-                            className="fa fa-angle-double-left"
-                            aria-hidden="true"
-                          ></i>{" "}
-                          Prev
-                        </>
-                      }
-                      renderOnZeroPageCount={null}
-                    />
-                    <select
-                      value={perPage}
-                      onChange={(e) => setPerPage(Number(e.target.value))}
-                    >
-                      <option value={5}>5 per page</option>
-                      <option value={10}>10 per page</option>
-                      <option value={20}>20 per page</option>
-                    </select>
-                  </nav>
-                </div>
+          <div className="flex justify-center mt-3">
+            <div id="pagination">
+              <div className="pagination-list">
+                <nav aria-label="Page navigation example">
+                  <ReactPaginate
+                    breakLabel="..."
+                    breakClassName="page-item"
+                    breakLinkClassName="page-link"
+                    containerClassName="pagination"
+                    pageClassName="page-item"
+                    pageLinkClassName="page-link"
+                    previousClassName="page-item"
+                    previousLinkClassName="page-link"
+                    nextClassName="page-item"
+                    nextLinkClassName="page-link"
+                    marginPagesDisplayed={2}
+                    nextLabel={
+                      <>
+                        Next{" "}
+                        <i className="fa fa-angle-double-right" aria-hidden="true"></i>
+                      </>
+                    }
+                    onPageChange={(e) => setPage(e.selected + 1)}
+                    pageRangeDisplayed={5}
+                    pageCount={pageCount}
+                    previousLabel={
+                      <>
+                        <i className="fa fa-angle-double-left" aria-hidden="true"></i>{" "}
+                        Prev
+                      </>
+                    }
+                    renderOnZeroPageCount={null}
+                  />
+                  <select
+                    value={perPage}
+                    onChange={(e) => setPerPage(Number(e.target.value))}
+                    className="ml-2"
+                  >
+                    <option value={5}>5 per page</option>
+                    <option value={10}>10 per page</option>
+                    <option value={20}>20 per page</option>
+                  </select>
+                </nav>
               </div>
             </div>
           </div>
         </div>
+
       </div>
       <div>
         <div

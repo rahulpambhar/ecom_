@@ -14,7 +14,7 @@ export default function Page() {
     <>
       <div className="flex">      
         <div className="bg-red-300 w-full h-full">
-        
+        Deshboard Awaited..
         </div>
       </div>
     </>

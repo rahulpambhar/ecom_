@@ -22,16 +22,11 @@ export default function Example({ openPreview, setOpenPreview, product }: any) {
     const openCart = useAppSelector((state) => state?.utilReducer?.openCart);
     const cart = useAppSelector((state) => state?.cartReducer?.cart?.CartItem) || [];
     const cartItem = cart?.find((item: any) => item?.productId === product.id);
+
     const addToCartFunction = async (id: string) => {
         const payload = { productId: id, action: "add" }
         const data = await dispatch(actionTocartFunc(payload))
-
-        if (data.payload.st) {
-            successToast(data?.payload.msg)
-
-        } else {
-            errorToast(data.payload.msg)
-        }
+        data.payload.st ? successToast(data?.payload.msg) : errorToast(data.payload.msg)
     }
 
     const actionTocartFunction = async (item: any, action: any) => {
@@ -41,14 +36,8 @@ export default function Example({ openPreview, setOpenPreview, product }: any) {
                 errorToast("Minimum 1 quantity required")
                 return;
             }
-
             const data = await dispatch(actionTocartFunc(payload))
-
-            if (data?.payload.st) {
-                successToast(data?.payload.msg)
-            } else {
-                errorToast(data.payload.msg)
-            }
+            data?.payload.st ? successToast(data?.payload.msg) : errorToast(data.payload.msg)
         } catch (err) {
             errorToast(err);
         }
@@ -96,34 +85,33 @@ export default function Example({ openPreview, setOpenPreview, product }: any) {
                                             {/* <Image src={product.imageSrc} alt={product.imageAlt} className="object-cover object-center" /> */}
                                         </div>
                                         <div className="sm:col-span-8 lg:col-span-7">
-                                            <h2 className="text-2xl font-bold text-gray-900 sm:pr-12">{cartItem?.product.name}</h2>
+                                            <h2 className="text-2xl font-bold text-gray-900 sm:pr-12">{product.name}</h2>
 
                                             <section aria-labelledby="information-heading" className="mt-2">
                                                 <h3 id="information-heading" className="sr-only">
                                                     Product information
                                                 </h3>
 
-                                                <p className="text-2xl text-gray-900">{cartItem?.product.price}</p>
+                                                <p className="text-2xl text-gray-900">{product.price}</p>
 
                                                 {/* Reviews */}
                                                 <div className="mt-6">
                                                     <h4 className="sr-only">Reviews</h4>
                                                     <div className="flex items-center">
                                                         <div className="flex items-center">
-                                                            {[0, 1, 2, 3, 4].map((rating) => (
+                                                            {[0, 1, 2, 3, 4,].map((rating) => (
                                                                 <StarIcon
                                                                     key={rating}
                                                                     className={classNames(
-                                                                        product.rating > rating ? 'text-gray-900' : 'text-gray-200',
+                                                                        product?.avgRating > rating ? 'text-gray-900' : 'text-gray-200',
                                                                         'h-5 w-5 flex-shrink-0'
                                                                     )}
                                                                     aria-hidden="true"
                                                                 />
                                                             ))}
                                                         </div>
-                                                        <p className="sr-only">{cartItem?.product.rating} out of 5 stars</p>
                                                         <a href="#" className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500">
-                                                            {cartItem?.product.reviewCount} reviews
+                                                            {product.numReviews ? product.numReviews : 0} reviews
                                                         </a>
                                                     </div>
                                                 </div>

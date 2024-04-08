@@ -102,6 +102,7 @@ export async function getOrders(id) {
             userId: id,
             isBlocked: false,
         },
+
         include: {
             OrderItem: {
                 include: {
@@ -112,7 +113,12 @@ export async function getOrders(id) {
                     },
                 }
             }
-        }
+        },
+        orderBy: {
+            createdAt: 'desc'
+        },
     });
+    console.log('orders::: ', orders);
+
     return orders;
 }

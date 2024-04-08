@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa6";
 import { FaHeart, FaSearch } from "react-icons/fa";
 import { FaRegHeart } from "react-icons/fa";
@@ -21,8 +21,9 @@ import { setOpenCart } from '@/app/redux/slices/utilSlice';
 import { useParams } from 'next/navigation'
 import { Categories, SubCategory, Product } from "../../../../types/global";
 import { errorToast, successToast } from "@/components/toster";
+import { addToWishList } from "@/app/redux/slices/wishListSlice";
 
-const Makeupnailscard = ({ item }: { item: any; }) => {
+const Makeupnailscard = ({ item, wish }: { item: any; wish: boolean }) => {
   const dispatch = useAppDispatch();
   const params = useParams();
 
@@ -32,14 +33,15 @@ const Makeupnailscard = ({ item }: { item: any; }) => {
 
   const cart = useAppSelector((state) => state?.cartReducer?.cart?.CartItem) || [];
   const openCart = useAppSelector((state) => state?.utilReducer?.openCart);
-  const categories: Categories[] = useAppSelector((state): any => state?.categories?.categories);
-  const subCategories: SubCategory[] = categories.filter((item): item is Categories => item?.name === params.sub).flatMap((category: any) => category?.SubCategory);
-
-  const [like, setLike] = useState(false);
 
 
-  const handelike = () => {
-    setLike(!like);
+
+  const handelike = async () => {
+    if (session) {
+      dispatch(addToWishList({ productId: item.id, }));     
+    } else {
+      dispatch(isLoginModel(true));
+    }
   };
 
   const addToCartFunction = async (id: string) => {
@@ -51,13 +53,16 @@ const Makeupnailscard = ({ item }: { item: any; }) => {
     } else {
       errorToast(data.payload.msg)
     }
-  }
+  } 
+
+
   return (
     <>
       <div className="relative  w-[260px] mx-5 my-3 bg-white pb-5  hover:shadow-2xl">
         <div className="flex justify-end absolute top-2 right-0 pr-5 ">
           <button onClick={handelike}>
-            {like ? (
+
+            {wish ? (
               <FaHeart className="w-7 h-7 text-red-500" />
             ) : (
               <FaRegHeart className="w-7 h-7 " />

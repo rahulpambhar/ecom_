@@ -10,6 +10,7 @@ import Link from "next/link";
 import { toast } from "react-hot-toast"
 import { isLoginModel, setOpenCart } from '../../../../app/redux/slices/utilSlice'
 import { signOut } from "next-auth/react";
+import { fetchWhishList } from "@/app/redux/slices/wishListSlice";
 
 const Uppernav = () => {
   const { data: session }: any = useSession();
@@ -20,6 +21,7 @@ const Uppernav = () => {
   useEffect(() => {
     if (session) {
       dispatch(fetchCart());
+      dispatch(fetchWhishList());
     }
   }, [session, dispatch]);
   return (
@@ -33,22 +35,26 @@ const Uppernav = () => {
           Everyone loves!
         </div>
         <div className=" relative flex gap-3 lg:gap-5">
-          <Image src={"/image/heart.svg"} alt="" width={28} height={100} />
+          {
+            session ?
+              <Link href="/profile?wish=1">
+                <Image src={"/image/heart.svg"} alt="" width={28} height={100} />
+              </Link> : ""
+          }
           <div className="absolute -top-2 right-9  bg-white rounded-full px-2">
             {cart && cart?.CartItem?.length}
           </div>
+          {
+            session ?
+              <Link href="/profile">
+                <Image src={"/image/UserCircle.svg"} alt="" width={28} height={100} />
+              </Link> : ""
+          }
           <Image src={"/image/ShoppingCartSimple.svg"} alt="" width={28} height={50}
             onClick={() => {
-              if (!session) {
-                toast.error("Please Login First")
-                return
-              }
               dispatch(setOpenCart(!openCart))
             }}
           />
-          <Link href="/profile">
-            <Image src={"/image/UserCircle.svg"} alt="" width={28} height={100} />
-          </Link>
           <div className="text-light">
             {session ? (
               <>

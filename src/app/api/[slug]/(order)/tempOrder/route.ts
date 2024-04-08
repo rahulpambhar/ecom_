@@ -66,11 +66,7 @@ export async function POST(request: Request) {
             paidAt: new Date(),
             payStatus: "SUCCESS",
             paymentDetail: "paayment done",
-            paymentMethod: "online",
-
-            isDelivered: false,
-            deliveredAt: new Date(),
-            deliveryAddress: "abc",
+            paymentMethod: "online",        
 
             cart: { connect: { id: cart.id } },
             user: { connect: { id: session?.user?.id } },

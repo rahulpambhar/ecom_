@@ -6,119 +6,9 @@ import { fetchCategories } from "../../redux/slices/categorySlice";
 import { useParams } from "next/navigation";
 import CategoryCard from "../../../components/frontside/CategoryCard";
 import { Categories, SubCategory } from "../../../../types/global";
-import Breadcrumb from "@/components/admin/breadcrumb";
 
 import Makeupnailscard from "@/components/frontside/makeup_nails_card/Makeupnailscard";
-const Topselectionitem = [
-  {
-    id: 1,
-    image: "/image/makeup_nail.svg",
-    label: "Product External",
-    description: "4.4  (57,164)",
-  },
-  {
-    id: 2,
-    image: "/image/makeup_nail.svg",
-    label: "Second Item",
-    description: "4.4  (57,164)",
-  },
-  {
-    id: 3,
-    image: "/image/makeup_nail.svg",
-    label: "Third Item",
-    description: "4.4  (57,164)",
-  },
-  {
-    id: 4,
-    image: "/image/makeup_nail.svg",
-    label: "Product External",
-    description: "4.4  (57,164)",
-  },
-  {
-    id: 5,
-    image: "/image/makeup_nail.svg",
-    label: "Second Item",
-    description: "4.4  (57,164)",
-  },
-  {
-    id: 6,
-    image: "/image/makeup_nail.svg",
-    label: "Third Item",
-    description: "4.4  (57,164)",
-  },
-  {
-    id: 7,
-    image: "/image/makeup_nail.svg",
-    label: "Product External",
-    description: "4.4  (57,164)",
-  },
-  {
-    id: 8,
-    image: "/image/makeup_nail.svg",
-    label: "Second Item",
-    description: "4.4  (57,164)",
-  },
-  {
-    id: 9,
-    image: "/image/makeup_nail.svg",
-    label: "Third Item",
-    description: "4.4  (57,164)",
-  },
-  {
-    id: 10,
-    image: "/image/makeup_nail.svg",
-    label: "Product External",
-    description: "4.4  (57,164)",
-  },
-  {
-    id: 12,
-    image: "/image/makeup_nail.svg",
-    label: "Second Item",
-    description: "4.4  (57,164)",
-  },
-  {
-    id: 13,
-    image: "/image/makeup_nail.svg",
-    label: "Third Item",
-    description: "4.4  (57,164)",
-  },
-  {
-    id: 14,
-    image: "/image/makeup_nail.svg",
-    label: "Product External",
-    description: "4.4  (57,164)",
-  },
-  {
-    id: 15,
-    image: "/image/makeup_nail.svg",
-    label: "Second Item",
-    description: "4.4  (57,164)",
-  },
-  {
-    id: 16,
-    image: "/image/makeup_nail.svg",
-    label: "Third Item",
-    description: "4.4  (57,164)",
-  },
-  {
-    id: 17,
-    image: "/image/makeup_nail.svg",
-    label: "Product External",
-    description: "4.4  (57,164)",
-  },
-  {
-    id: 18,
-    image: "/image/makeup_nail.svg",
-    label: "Second Item",
-    description: "4.4  (57,164)",
-  },
-  {
-    id: 19,
-    image: "/image/makeup_nail.svg",
-    label: "Third Item",
-    description: "4.4  (57,164)",
-  },
-];
+import { FaS } from "react-icons/fa6";
 
 const Page = () => {
   const params = useParams();
@@ -127,13 +17,14 @@ const Page = () => {
     (state): any => state?.categories?.products
   );
   const [currentPage, setCurrentPage] = useState(1);
-  const [postPerPage, setPostPerPage] = useState(12);
+  const [postPerPage, setPostPerPage] = useState(24);
 
   const lastPostIndex = currentPage * postPerPage;
   const firstPostIndex = lastPostIndex - postPerPage;
   const currentpage = products.slice(firstPostIndex, lastPostIndex);
   const nopage = Math.ceil(products.length / postPerPage);
   const numbers = Array.from({ length: nopage }, (_, index) => index + 1);
+  const wishList: any[] = useAppSelector((state) => state?.wishListReducer?.wishList);
 
   const paginate = (pageNumber: number) => {
     setCurrentPage(pageNumber);
@@ -158,9 +49,10 @@ const Page = () => {
       <div className=" pt-5 border-l-2  ">
         <div className=" grid grid-cols-1 md:grid-cols-2  lg:grid-cols-4 pt-5  justify-center items-center">
           {products.length > 0
-            ? currentpage.map((item, index) => (
-                <Makeupnailscard key={index} item={item} />
-              ))
+            ? currentpage.map((item, index) => {
+              let wish: boolean = wishList.find((wish) => (wish.productId === item.id)) ? true : false
+              return <Makeupnailscard key={index} item={item} wish={wish} />;
+            })
             : ""}
         </div>
         <div className="flex mt-10 justify-center items-center border-t-2">
@@ -189,9 +81,8 @@ const Page = () => {
                   <div
                     key={num}
                     onClick={() => paginate(num)}
-                    className={`flex justify-center items-center w-8 h-8 rounded-full hover:bg-black hover:text-white ${
-                      isCurrentPage ? "bg-black  text-white" : ""
-                    }`}
+                    className={`flex justify-center items-center w-8 h-8 rounded-full hover:bg-black hover:text-white ${isCurrentPage ? "bg-black  text-white" : ""
+                      }`}
                   >
                     {num}
                   </div>

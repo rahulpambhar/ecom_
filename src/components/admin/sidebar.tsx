@@ -31,11 +31,9 @@ function SidebarMenu({
   //   const { btn } = useContext(GlobalContext);
   return (
     <button
-      className={` ${
-        pathname === `/${name}` ? "text-[--orange] " : "text-[--text-color]"
-      } flex  hover:text-[--orange]  items-center  ${
-        btn ? "justify-center" : "px-4 justify-start w-full gap-[15px]"
-      } py-3`}
+      className={` ${pathname === `/${name}` ? "text-[--orange] " : "text-[--text-color]"
+        } flex  hover:text-[--orange]  items-center  ${btn ? "justify-center" : "px-4 justify-start w-full gap-[15px]"
+        } py-3`}
       onClick={handleMenu}
     >
       <div>{icon}</div>
@@ -166,83 +164,98 @@ const Admin_Sidebar = ({ closeSidebar }: any) => {
               pathname === "admin/master/category" ||
               pathname === "admin/master/products" ||
               pathname === "admin/master/subCategory") && (
-              <div className=" grid gap-2 justify-center pl-[25px]">
-                <Link
-                  href="/admin/master/category"
-                  className={`flex  justify-start items-center text-small aleo hover:text-[--orange] ${
-                    pathname === "/master/hsn_san"
+                <div className=" grid gap-2 justify-center pl-[25px]">
+                  <Link
+                    href="/admin/master/category"
+                    className={`flex  justify-start items-center text-small aleo hover:text-[--orange] ${pathname === "/master/hsn_san"
                       ? " text-[--orange] "
                       : "text-[--table]"
-                  }`}
-                >
-                  <p>
-                    <PiDotOutlineFill className=" font-bold text-xlarge" />{" "}
-                  </p>
-                  <p
-                    className={`flex justify-center items-center text-small aleo hover:text-[--orange]  ${
-                      pathname === "/master/hsn_san"
+                      }`}
+                  >
+                    <p>
+                      <PiDotOutlineFill className=" font-bold text-xlarge" />{" "}
+                    </p>
+                    <p
+                      className={`flex justify-center items-center text-small aleo hover:text-[--orange]  ${pathname === "/master/hsn_san"
                         ? " text-[--orange] "
                         : "text-[--text-color]"
-                    } `}
-                  >
-                    Categories
-                  </p>
-                </Link>
-                <Link
-                  href="/admin/master/products"
-                  className={`flex  justify-start items-center hover:text-[--orange] ${
-                    pathname === "/master/category_subcategory"
+                        } `}
+                    >
+                      Categories
+                    </p>
+                  </Link>
+                  <Link
+                    href="/admin/master/products"
+                    className={`flex  justify-start items-center hover:text-[--orange] ${pathname === "/master/category_subcategory"
                       ? " text-[--orange] "
                       : "text-[--table]"
-                  }`}
-                >
-                  <p>
-                    <PiDotOutlineFill className=" font-bold text-xlarge" />{" "}
-                  </p>
-                  <p
-                    className={`flex justify-center items-center text-small aleo hover:text-[--orange]  ${
-                      pathname === "/master/category_subcategory"
+                      }`}
+                  >
+                    <p>
+                      <PiDotOutlineFill className=" font-bold text-xlarge" />{" "}
+                    </p>
+                    <p
+                      className={`flex justify-center items-center text-small aleo hover:text-[--orange]  ${pathname === "/master/category_subcategory"
                         ? " text-[--orange] "
                         : "text-[--text-color]"
-                    } `}
-                  >
-                    Products
-                  </p>
-                </Link>
-                <Link
-                  href="/admin/master/subCategory"
-                  className={`flex  justify-start items-center hover:text-[--orange] ${
-                    pathname === "/master/tradingaccount"
+                        } `}
+                    >
+                      Products
+                    </p>
+                  </Link>
+                  <Link
+                    href="/admin/master/subCategory"
+                    className={`flex  justify-start items-center hover:text-[--orange] ${pathname === "/master/tradingaccount"
                       ? " text-[--orange] "
                       : "text-[--table]"
-                  }`}
-                >
-                  <p>
-                    <PiDotOutlineFill className="font-bold text-xlarge" />{" "}
-                  </p>
-                  <p
-                    className={`flex justify-center items-center text-small aleo hover:text-[--orange] ${
-                      pathname === "/master/tradingaccount"
+                      }`}
+                  >
+                    <p>
+                      <PiDotOutlineFill className="font-bold text-xlarge" />{" "}
+                    </p>
+                    <p
+                      className={`flex justify-center items-center text-small aleo hover:text-[--orange] ${pathname === "/master/tradingaccount"
                         ? " text-[--orange] "
                         : "text-[--text-color]"
-                    } `}
-                  >
-                    SubCategory
-                  </p>
-                </Link>
-              </div>
-            )}
+                        } `}
+                    >
+                      SubCategory
+                    </p>
+                  </Link>
+                </div>
+              )}
 
             <SidebarMenu
-              name="stocksetup"
+              name="Orders"
               icon={
                 <AiOutlineDropbox className="w-[27px] h-[27px] flex hover:text- items-center justify-center" />
               }
               pathname={pathname}
-              text=" Stock Setup"
-              handleMenu={() => setsidebarOption("stocksetup")}
+              text="Orders"
+              handleMenu={() => setsidebarOption("Orders")}
             />
-            {/* {sidebarOption === "stocksetup" && <div>submenu of dashbaord</div>} */}
+            {sidebarOption === "Orders" && <div className=" grid gap-2 justify-center pl-[25px]">
+              <Link
+                  href="/admin/orders/maintainOrders"
+                className={`flex  justify-start items-center text-small aleo hover:text-[--orange] ${pathname === "/master/hsn_san"
+                  ? " text-[--orange] "
+                  : "text-[--table]"
+                  }`}
+              >
+                <p>
+                  <PiDotOutlineFill className=" font-bold text-xlarge" />{" "}
+                </p>
+                <p
+                  className={`flex justify-center items-center text-small aleo hover:text-[--orange]  ${pathname === "/master/hsn_san"
+                    ? " text-[--orange] "
+                    : "text-[--text-color]"
+                    } `}
+                >
+                  Maintain Orders
+                </p>
+              </Link>
+
+            </div>}
             <SidebarMenu
               name="sellersetup"
               icon={
