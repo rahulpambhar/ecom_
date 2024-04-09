@@ -64,7 +64,7 @@ export default function Checkout() {
                                             <img alt="Product image" className="object-cover w-full h-full" src="/placeholder.svg" />
                                         </div>
                                         <div className="text-sm">
-                                            <div className="font-medium">{item?.name}</div>
+                                            <div className="font-medium">{item?.product?.name}</div>
                                             <div className="text-gray-500 dark:text-gray-400">${item?.price} x {item?.qty}</div>
                                         </div>
                                     </div>

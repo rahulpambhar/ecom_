@@ -118,7 +118,6 @@ export async function getOrders(id) {
             createdAt: 'desc'
         },
     });
-    console.log('orders::: ', orders);
 
     return orders;
 }

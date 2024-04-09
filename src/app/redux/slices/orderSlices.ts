@@ -32,7 +32,6 @@ export const getOrdersFunc = createAsyncThunk('order/getOrdersFunc', async (_, t
     const { rejectWithValue } = thunkApiConfig;
     try {
         const response = await axios.get(`${apiUrl}/createOrder/order`,)
-        console.log('response::: ', response);
         return response.data;
     } catch (error) {
         const errorMessage = (error as Error).message || 'Unknown error occurred';

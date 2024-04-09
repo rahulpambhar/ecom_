@@ -91,6 +91,7 @@ export async function POST(request: Request) {
 
         for (let x in CartItem) {
             itemData.push({
+                productId: CartItem[x].productId,
                 qty: CartItem[x].qty,
                 price: CartItem[x].product.price,
                 netAmount: CartItem[x].qty * CartItem[x].product.price,
@@ -164,19 +165,13 @@ export async function POST(request: Request) {
             return NextResponse.json({ st: false, statusCode: StatusCodes.BAD_REQUEST, data: [], msg: "order created unsuccess!", });
         }
 
-
-        // await prisma.order.deleteMany({})
-        // await prisma.order.deleteMany({})
-        // await prisma.tempOrder.deleteMany({})
-        // await prisma.tempOrderItem.deleteMany({})
-
         const createItem = await prisma.orderItem.createMany({
             data: itemData.map((item: any) =>
             ({
                 ...item,
                 orderId: createOrder.id,
-                // productId: { connect: { id: createOrder.id } }
-                productId: createOrder.id,
+                productId: item.productId
+
             }))
         })
 
