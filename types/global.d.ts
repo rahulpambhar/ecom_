@@ -53,6 +53,12 @@ interface Categories {
     userId: string;
     subcategories: SubCategory[];
 }
+type payload = {
+    review: string;
+    ratings: number;
+    id: any;
+
+}
 
 
 interface CategoriesState {

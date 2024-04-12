@@ -5,11 +5,11 @@ interface ThunkApiConfig {
     rejectWithValue: any;
 }
 
-export const createTempOrderFunc = createAsyncThunk('order/creteTempOrder', async (_, thunkApiConfig: ThunkApiConfig) => {
+export const createTempOrderFunc = createAsyncThunk('order/creteTempOrder', async (orderID: string, thunkApiConfig: ThunkApiConfig) => {
 
     const { rejectWithValue } = thunkApiConfig;
     try {
-        const response = await axios.post(`${apiUrl}/createOrder/tempOrder`)
+        const response = await axios.post(`${apiUrl}/createOrder/tempOrder`, { orderID })
         return response.data;
     } catch (error) {
         const errorMessage = (error as Error).message || 'Unknown error occurred';

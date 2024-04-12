@@ -19,7 +19,7 @@ export default function Checkout() {
     let [order, setOrder] = useState([])
     const dispatch = useAppDispatch();
     const searchParams = useSearchParams()
-    const orderID = searchParams.get('orderID')
+    const orderID: string | null = searchParams.get('orderID')
     const router = useRouter()
     const cartItem = useAppSelector((state) => state?.cartReducer?.cart?.CartItem) || [];
     const getOrders = async () => await dispatch(getOrdersFunc())
@@ -147,7 +147,7 @@ export default function Checkout() {
                             session &&
                             <button onClick={async () => {
 
-                                const tempData = await dispatch(createTempOrderFunc())
+                                const tempData = await dispatch(createTempOrderFunc(orderID ? orderID : ""))
                                 if (tempData?.payload.st) {
                                     successToast("Temp order done!")
                                     const data: any = await dispatch(createOrderFunc(tempData?.payload.temOrdrId))

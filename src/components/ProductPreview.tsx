@@ -1,5 +1,5 @@
 "use client";
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { Dialog, RadioGroup, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { StarIcon } from '@heroicons/react/20/solid'
@@ -9,19 +9,29 @@ import { actionTocartFunc } from '../app/redux/slices/cartSclice';
 import { errorToast, successToast } from "@/components/toster";
 import { useSession } from "next-auth/react";
 import { isLoginModel, setOpenCart } from '../app/redux/slices/utilSlice'
+import axios from 'axios';
+import { reviewSubmit, getReviews } from '@/app/redux/slices/reviewSlice';
+import { type } from 'os';
 
 function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ');
 }
 
+
+
 export default function Example({ openPreview, setOpenPreview, product }: any) {
     const dispatch = useAppDispatch();
 
     const { data: session, status } = useSession();
+    const [activeTab, setActiveTab] = useState('description');
+    const [review, setReview] = useState('');
+    const [ratings, setRaings] = useState(0);
 
     const openCart = useAppSelector((state) => state?.utilReducer?.openCart);
     const cart = useAppSelector((state) => state?.cartReducer?.cart?.CartItem) || [];
     const cartItem = cart?.find((item: any) => item?.productId === product.id);
+    const reviews = useAppSelector((state: any) => state?.reviewReducer?.reViewList) || [];
+    console.log('reviews::: ', reviews);
 
     const addToCartFunction = async (id: string) => {
         const payload = { productId: id, action: "add" }
@@ -42,6 +52,27 @@ export default function Example({ openPreview, setOpenPreview, product }: any) {
             errorToast(err);
         }
     }
+
+    const setSubmit = async (e: any) => {
+        e.preventDefault();
+        try {
+            const payload = {
+                review, ratings, id: product.id
+            }
+            const data = await dispatch(reviewSubmit(payload))
+        } catch (error) {
+            console.log('error::: ', error);
+        }
+    }
+
+    useEffect(() => {
+        session && (async () => {
+            const data = await dispatch(getReviews(product.id));
+        })();
+    }, [session, product.id])
+
+
+
 
     return (
         <Transition.Root show={openPreview} as={Fragment}>
@@ -275,11 +306,51 @@ export default function Example({ openPreview, setOpenPreview, product }: any) {
                                                     }
                                                 </form>
                                             </section>
+                                            <div className="tab-content relative ">
+                                                <div
+                                                    className={`tab-pane bg-grey-light py-10 transition-opacity md:py-16 ${activeTab === 'reviews' ? 'active' : ''}`}
+                                                    role="tabpanel"
+                                                    aria-hidden={activeTab !== 'reviews'}
+                                                >
+                                                    <form className="mx-auto w-5/6" onSubmit={setSubmit}>
+                                                        <div className="grid grid-cols-1 gap-x-10 gap-y-5 pt-10 sm:grid-cols-2">
+
+                                                        </div>
+                                                        <div className="grid grid-cols-1 gap-x-10 gap-y-5 pt-10 sm:grid-cols-2">
+
+                                                            <div className="w-full pt-10 sm:pt-0">
+                                                                <label className="mb-2 block font-hk text-sm text-secondary">Rating</label>
+                                                                <div className="flex pt-4">
+                                                                    <input type="text" onChange={(e: any) => setRaings(e.target.value)} />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div className="sm:w-12/25 pt-10">
+                                                            <label
+                                                                htmlFor="message"
+                                                                className="mb-2 block font-hk text-sm text-secondary">Review Message</label>
+                                                            <textarea
+                                                                placeholder="Write your review here"
+                                                                className="form-textarea h-28"
+                                                                id="message"
+                                                                onChange={(e) => setReview(e.target.value)}
+                                                            >
+
+                                                            </textarea>
+                                                        </div>
+                                                        <button className="mx-auto w-5/6 pt-8 pb-4 text-center sm:text-left md:pt-10">
+                                                            Submit Review
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+
                             </Dialog.Panel>
                         </Transition.Child>
+
                     </div>
                 </div>
             </Dialog>

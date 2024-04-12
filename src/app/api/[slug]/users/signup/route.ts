@@ -74,6 +74,8 @@ export async function POST(request: Request) {
             country,
             address,
             pincode,
+            street: '',
+            state: '',
 
             gender,
             profile_pic: data?.image || "",

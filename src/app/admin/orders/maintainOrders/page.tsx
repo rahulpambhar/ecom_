@@ -70,7 +70,7 @@ function Page() {
                                         </td>
                                     </tr>
                                 ) : data?.length > 0 ? (
-                                    data?.map((ele) => (
+                                    data?.map((ele: any) => (
                                         <tr
                                             key={ele?.id}
                                             className="border-collapse hover:bg-[--table-hover]"
@@ -94,7 +94,7 @@ function Page() {
                                                 <IoMenuOutline onClick={() => {
                                                     // setThreeDot(ele.id);
                                                 }} />
-                                                {ThreeDot === ele.id && (
+                                                {/* {ThreeDot === ele.id && (
                                                     <div
                                                         ref={ref}
                                                         className="absolute top-[40px] right-0 bg-white z-40 shadow-lg w-full min-w-[90px] rounded-sm border border-[--humber-active] cursor-pointer"
@@ -120,7 +120,7 @@ function Page() {
                                                             </button>
                                                         </div>
                                                     </div>
-                                                )}
+                                                )} */}
                                             </td>
                                         </tr>
                                     ))
