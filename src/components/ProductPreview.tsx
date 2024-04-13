@@ -26,12 +26,15 @@ export default function Example({ openPreview, setOpenPreview, product }: any) {
     const [activeTab, setActiveTab] = useState('description');
     const [review, setReview] = useState('');
     const [ratings, setRaings] = useState(0);
+    const [reviewTitle, setReviewTitle] = useState("");
 
     const openCart = useAppSelector((state) => state?.utilReducer?.openCart);
     const cart = useAppSelector((state) => state?.cartReducer?.cart?.CartItem) || [];
     const cartItem = cart?.find((item: any) => item?.productId === product.id);
     const reviews = useAppSelector((state: any) => state?.reviewReducer?.reViewList) || [];
-    console.log('reviews::: ', reviews);
+    const averageRating = useAppSelector((state: any) => state?.reviewReducer?.averageRating) || 0
+
+
 
     const addToCartFunction = async (id: string) => {
         const payload = { productId: id, action: "add" }
@@ -57,9 +60,12 @@ export default function Example({ openPreview, setOpenPreview, product }: any) {
         e.preventDefault();
         try {
             const payload = {
-                review, ratings, id: product.id
+                review, ratings, reviewTitle, id: product.id
             }
             const data = await dispatch(reviewSubmit(payload))
+            setReviewTitle("");
+            setReview("");
+            setRaings(0);
         } catch (error) {
             console.log('error::: ', error);
         }
@@ -71,12 +77,22 @@ export default function Example({ openPreview, setOpenPreview, product }: any) {
         })();
     }, [session, product.id])
 
-
-
+    useEffect(() => {
+        if (!session) return;
+        const myReview = reviews.find((item: any) => item?.userId === session?.user?.id && item?.productId === product.id);
+        myReview && openPreview && setReview(myReview?.review);
+        myReview && openPreview && setRaings(myReview?.rating);
+        myReview && openPreview && setReviewTitle(myReview?.reviewTitle);
+    }, [reviews, averageRating, openPreview])
 
     return (
         <Transition.Root show={openPreview} as={Fragment}>
-            <Dialog as="div" className="relative z-10" onClose={setOpenPreview}>
+            <Dialog as="div" className="relative z-10" onClose={(e) => {
+                setOpenPreview(e)
+                setReviewTitle("");
+                setReview("");
+                setRaings(0);
+            }}>
                 <Transition.Child
                     as={Fragment}
                     enter="ease-out duration-600"
@@ -105,7 +121,12 @@ export default function Example({ openPreview, setOpenPreview, product }: any) {
                                     <button
                                         type="button"
                                         className="absolute right-4 top-4 text-gray-400 hover:text-gray-500 sm:right-6 sm:top-8 md:right-6 md:top-6 lg:right-8 lg:top-8"
-                                        onClick={() => setOpenPreview(!openPreview)}
+                                        onClick={() => {
+                                            setOpenPreview(!openPreview)
+                                            setReviewTitle("");
+                                            setReview("");
+                                            setRaings(0);
+                                        }}
                                     >
                                         <span className="sr-only">Close</span>
                                         <XMarkIcon className="h-6 w-6" aria-hidden="true" />
@@ -284,7 +305,9 @@ export default function Example({ openPreview, setOpenPreview, product }: any) {
                                                                     onClick={() => {
                                                                         dispatch(setOpenCart(!openCart))
                                                                         setOpenPreview(!openPreview);
-
+                                                                        setReviewTitle("");
+                                                                        setReview("");
+                                                                        setRaings(0);
                                                                     }}>
                                                                     Open to cart
                                                                 </button>
@@ -299,6 +322,9 @@ export default function Example({ openPreview, setOpenPreview, product }: any) {
                                                                     } else {
                                                                         setOpenPreview(!openPreview);
                                                                         dispatch(isLoginModel(true));
+                                                                        setReviewTitle("");
+                                                                        setReview("");
+                                                                        setRaings(0);
                                                                     }
                                                                 }}>
                                                                 Add to cart
@@ -328,14 +354,28 @@ export default function Example({ openPreview, setOpenPreview, product }: any) {
                                                         <div className="sm:w-12/25 pt-10">
                                                             <label
                                                                 htmlFor="message"
+                                                                className="mb-2 block font-hk text-sm text-secondary">Review Title</label>
+                                                            <input
+                                                                placeholder="Write your review here"
+                                                                className="form-textarea h-28"
+                                                                value={reviewTitle}
+                                                                id="message"
+                                                                onChange={(e) => setReviewTitle(e.target.value)}
+                                                            >
+
+                                                            </input>
+                                                        </div>
+                                                        <div className="sm:w-12/25 pt-10">
+                                                            <label
+                                                                htmlFor="message"
                                                                 className="mb-2 block font-hk text-sm text-secondary">Review Message</label>
                                                             <textarea
                                                                 placeholder="Write your review here"
                                                                 className="form-textarea h-28"
                                                                 id="message"
+                                                                value={review}
                                                                 onChange={(e) => setReview(e.target.value)}
                                                             >
-
                                                             </textarea>
                                                         </div>
                                                         <button className="mx-auto w-5/6 pt-8 pb-4 text-center sm:text-left md:pt-10">

@@ -21,6 +21,7 @@ export const reviewSubmit = createAsyncThunk('wishList/add', async (payload: pay
     try {
         const response = await axios.post(`${apiUrl}/addReviewRatings/reviewRatings`, { payload })
         if (response.data?.st) {
+            successToast(response.data.msg);
             return response.data?.data;
         } else {
             errorToast(response.data.msg);
@@ -33,6 +34,7 @@ export const reviewSubmit = createAsyncThunk('wishList/add', async (payload: pay
 
 const initialState: any = {
     reViewList: [],
+    averageRating: 0,
     loading: false,
     error: null,
     status: 'idle',
@@ -50,7 +52,8 @@ const reViewListReducer = createSlice({
             })
             .addCase(reviewSubmit.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                state.reViewList = action.payload;
+                state.reViewList = action?.payload?.reviews;
+                state.averageRating = action?.payload?.averageRating;
             })
             .addCase(reviewSubmit.rejected, (state, action) => {
                 state.status = 'failed';
@@ -62,7 +65,8 @@ const reViewListReducer = createSlice({
             })
             .addCase(getReviews.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                state.reViewList = action.payload;
+                state.reViewList = action?.payload?.reviews;
+                state.averageRating = action?.payload?.averageRating;
             })
             .addCase(getReviews.rejected, (state, action) => {
                 state.status = 'failed';

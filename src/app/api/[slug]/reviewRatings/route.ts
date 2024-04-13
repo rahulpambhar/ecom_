@@ -9,6 +9,42 @@ import { getServerSession } from "next-auth";
 import prisma from "../../../../../prisma/prismaClient";
 
 
+async function getProductReviewsWithAvg(id: string) {
+    const [reviews, avgRating] = await Promise.all([
+        prisma.review.findMany({
+            where: {
+                productId: id,
+            },
+            orderBy: {
+                createdAt: 'desc'
+            },
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        name: true,
+                        email: true,
+                        profile_pic: true,
+                    }
+                }
+            }
+        }),
+        prisma.review.aggregate({
+            where: {
+                productId: id,
+            },
+            _avg: {
+                rating: true
+            }
+        })
+    ]);
+
+    const averageRating = avgRating._avg.rating;
+
+    return { reviews, averageRating };
+}
+
+
 export async function POST(request: Request) {
     try {
         let session: any = await getServerSession(authOptions);
@@ -21,7 +57,7 @@ export async function POST(request: Request) {
             });
         }
         const body = await request.json();
-        const { review, ratings, id } = body.payload
+        const { reviewTitle, review, ratings, id } = body.payload
 
         const isReview = await prisma.review.findFirst({
             where: {
@@ -33,8 +69,9 @@ export async function POST(request: Request) {
         if (!isReview) {
             const res = await prisma.review.create({
                 data: {
-                    review,
                     rating: +ratings,
+                    review,
+                    reviewTitle,
                     userId: session?.user?.id,
                     productId: id,
                     createdBy: session?.user?.id,
@@ -47,27 +84,22 @@ export async function POST(request: Request) {
                     id: isReview.id
                 },
                 data: {
+                    reviewTitle,
                     review,
                     rating: +ratings,
                     updatedBy: session?.user?.id,
                 }
             })
         }
-
-        const getReviews = await prisma.review.findMany({
-            where: {
-                productId: id,
-            },
-            orderBy: {
-                createdAt: 'desc'
-            }
-        })
+        const { reviews, averageRating } = await getProductReviewsWithAvg(id);
+        const data = { reviews, averageRating }; 
+       
 
         return NextResponse.json({
             st: true,
             statusCode: StatusCodes.OK,
-            data: getReviews,
-            msg: "Thank you for your review.",
+            data: data,
+            msg: "Thank you for your valuable feedback.",
         });
 
     } catch (error) {
@@ -81,15 +113,6 @@ export async function POST(request: Request) {
     }
 }
 
-import { Prisma } from '@prisma/client';
-
-
-type ReviewQuery = Prisma.ReviewGroupByArgs & {
-    include: {
-        user: boolean;
-
-    };
-};
 
 export async function GET(request: Request) {
     try {
@@ -105,25 +128,13 @@ export async function GET(request: Request) {
 
         const { query }: any = parse(request.url, true);
         let { id, }: any = query;
+        
 
-        const getReviews: any = await prisma.review.findMany({
-            where: {
-                productId: id,
-            },
-            orderBy: {
-                createdAt: 'desc'
-            },
-            include: {
-                user: { name: true, profile_pic: true }
-            } as any
-        });
-
-        const totalRatings = getReviews.reduce((acc: number, review: any) => acc + (review.rating || 0), 0);
-        // const data =
-        //     getReviews = getReviews.length > 0 ? totalRatings / getReviews.length : 0
+        const { reviews, averageRating } = await getProductReviewsWithAvg(id);
+        const data = { reviews, averageRating };   
 
         return NextResponse.json({
-            st: true, statusCode: StatusCodes.OK, data: getReviews, msg: "review list fetch.",
+            st: true, statusCode: StatusCodes.OK, data, msg: "review list fetch.",
         });
 
     } catch (error) {

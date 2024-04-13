@@ -401,7 +401,9 @@ model tempOrderItem {
 
 model Review {
     id        String    @id @default(auto()) @map("_id") @db.ObjectId
+   
     rating    Int?
+    reviewTitle   String?
     review   String?
 
     user      User?     @relation(fields: [userId], references: [id])
