@@ -64,6 +64,7 @@ model User {
     gender             String
     password           String
     passwordResetToken String?
+    otp                Int?
     profile_pic        String?
     isBlocked          Boolean @default(false)
     isAdmin            Boolean @default(false)
@@ -306,7 +307,7 @@ model Order {
 }
 
 model OrderItem {
-    id   String  @id @default(auto()) @map("_id") @db.ObjectId
+    id String @id @default(auto()) @map("_id") @db.ObjectId
 
     qty       Int?
     price     Float?
@@ -348,7 +349,7 @@ model tempOrder {
     paidAt        DateTime
     payStatus     Status
     paymentDetail Json?
-    paymentMethod String? 
+    paymentMethod String?
 
     dueDays Int?
     dueDate DateTime? @db.Date()
@@ -400,19 +401,19 @@ model tempOrderItem {
 }
 
 model Review {
-    id        String    @id @default(auto()) @map("_id") @db.ObjectId
-   
-    rating    Int?
-    reviewTitle   String?
-    review   String?
+    id String @id @default(auto()) @map("_id") @db.ObjectId
 
-    user      User?     @relation(fields: [userId], references: [id])
-    userId    String?   @db.ObjectId
+    rating      Int?
+    reviewTitle String?
+    review      String?
+
+    user   User?   @relation(fields: [userId], references: [id])
+    userId String? @db.ObjectId
 
     product   Products? @relation(fields: [productId], references: [id])
     productId String?   @db.ObjectId
-    
-    isDelete  Boolean   @default(false)
+
+    isDelete Boolean @default(false)
 
     createdAt DateTime @default(now())
     createdBy String?

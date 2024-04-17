@@ -38,3 +38,35 @@ body {
     text-wrap: balance;
   }
 }
+
+select {
+    appearance: none; /* Remove default arrow */
+    /* padding: 10px; */
+     appearance: none; /* Remove default arrow */
+    border: 1px solid #2f2f2f;
+    border-radius: 5px;
+    background-color: #f3f3f3;
+    font-size: 16px;
+    color: #000000;
+    cursor: pointer;
+}
+
+select:focus {
+    outline: none; /* Remove focus outline */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); /* Add box shadow on focus */
+}
+
+.registration {
+    appearance: none; /* Remove default arrow */
+    border: 1px solid #2f2f2f;
+    border-radius: 5px;
+    background-color: #f3f3f3;
+    font-size: 16px;
+    color: #000000;
+    cursor: pointer;
+}
+
+.registration:focus {
+    outline: none; /* Remove focus outline */
+    box-shadow: 0 0 5px rgba(0, 0, 0., 0.6); /* Add box shadow on focus */
+}

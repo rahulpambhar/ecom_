@@ -6,7 +6,7 @@ const Navbar = () => {
   return (
     <div className=" drop-shadow shadow-lg">
       <Uppernav />
-      <Lowernav />
+      {/* <Lowernav /> */}
     </div>
   );
 };
