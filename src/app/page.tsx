@@ -9,9 +9,33 @@ import Topselectionpart from "@/components/frontside/Topselectionpage/page";
 import Unitedfree from "@/components/frontside/Unitedfreepage/page";
 import OfferPage from "@/components/frontside/offer/page";
 import Singlenailpaint from "@/components/frontside/singlenailpaint/page";
+import Unitedfreecard from "@/components/frontside/unitedfree/page";
+import { useState } from "react";
 import { FaCircle, FaStar } from "react-icons/fa6";
 
+const careAboutItems1 = [
+  {
+    id: 1,
+    image: "/image/unitedfree.jpg",
+    label: "Absolut",
+    description: "Face and Body Lotion",
+  },
+  {
+    id: 2,
+    image: "/image/unitedfree.jpg",
+    label: "Absolut",
+    description: "Face and Body Lotion",
+  },
+  {
+    id: 3,
+    image: "/image/unitedfree.jpg",
+    label: "Absolut",
+    description: "Face and Body Lotion",
+  },
+];
+
 export default function Home() {
+  const [info, setInfo] = useState("description");
   return (
     <main>
       {/* <ImageSlider />
@@ -79,7 +103,105 @@ export default function Home() {
                 <input type="text" placeholder="small" className="w-full" />
               </div>
             </div>
+            <div className="flex items-center gap-5">
+              <button>Add to cart </button>
+              <button> buy now</button>
+            </div>
           </div>
+        </div>
+      </div>
+      <div className="bg-green-200">
+        <div className="flex items-center ">
+          <button
+            className={`p-3 ${info === "description" && "bg-pink-100"}`}
+            onClick={() => setInfo("description")}
+          >
+            Description
+          </button>
+          <button
+            className={`p-3 ${info === "additionalinfo" && "bg-pink-100"}`}
+            onClick={() => setInfo("additionalinfo")}
+          >
+            Additional Information
+          </button>
+          <button
+            className={`p-3 ${info === "reviews" && "bg-pink-100"}`}
+            onClick={() => setInfo("reviews")}
+          >
+            Reviews
+          </button>
+        </div>
+        <div className="bg-pink-100">
+          {info === "description" && (
+            <>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit
+              optio voluptatibus cumque aliquam possimus neque qui quasi
+              consectetur aperiam incidunt dolor provident id dicta, doloribus
+              deserunt ullam, voluptatem accusantium est?
+            </>
+          )}{" "}
+          {info === "additionalinfo" && (
+            <>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit
+              optio voluptatibus cumque aliquam possimus neque qui quasi
+              consectetur aperiam incidunt dolor provident id dicta, doloribus
+              deserunt ullam, voluptatem accusantium est? Lorem ipsum dolor sit
+              amet consectetur adipisicing elit. Suscipit optio voluptatibus
+              cumque aliquam possimus neque qui quasi consectetur aperiam
+              incidunt dolor provident id dicta, doloribus deserunt ullam,
+              voluptatem accusantium est? Lorem ipsum dolor sit amet consectetur
+              adipisicing elit. Suscipit optio voluptatibus cumque aliquam
+              possimus neque qui quasi consectetur aperiam incidunt dolor
+              provident id dicta, doloribus deserunt ullam, voluptatem
+              accusantium est?
+            </>
+          )}{" "}
+          {info === "reviews" && (
+            <>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit
+              optio voluptatibus cumque aliquam possimus neque qui quasi
+              consectetur aperiam incidunt dolor provident id dicta, doloribus
+              deserunt ullam, voluptatem accusantium est? Lorem ipsum dolor sit
+              amet consectetur adipisicing elit. Suscipit optio voluptatibus
+              cumque aliquam possimus neque qui quasi consectetur aperiam
+              incidunt dolor provident id dicta, doloribus deserunt ullam,
+              voluptatem accusantium est? Lorem ipsum dolor sit amet consectetur
+              adipisicing elit. Suscipit optio voluptatibus cumque aliquam
+              possimus neque qui quasi consectetur aperiam incidunt dolor
+              provident id dicta, doloribus deserunt ullam, voluptatem
+              accusantium est? Lorem ipsum dolor sit amet consectetur
+              adipisicing elit. Suscipit optio voluptatibus cumque aliquam
+              possimus neque qui quasi consectetur aperiam incidunt dolor
+              provident id dicta, doloribus deserunt ullam, voluptatem
+              accusantium est? Lorem ipsum dolor sit amet consectetur
+              adipisicing elit. Suscipit optio voluptatibus cumque aliquam
+              possimus neque qui quasi consectetur aperiam incidunt dolor
+              provident id dicta, doloribus deserunt ullam, voluptatem
+              accusantium est?
+            </>
+          )}
+        </div>
+      </div>
+      <div className="p-5">
+        <div className="flex justify-center items-center uppercase  text-5xl pt-10 font-normal text- unica-one">
+          <p>Related Products</p>
+        </div>
+        <p className="flex justify-center">
+          Get the latest news & updates from Elyssi
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2  lg:grid-cols-3 pt-10  lg:mx-44 gap-5 ">
+          {careAboutItems1.map((item) => (
+            <Unitedfreecard
+              key={item.id}
+              image={item.image}
+              label={item.label}
+              discription={item.description}
+            />
+          ))}
+        </div>
+        <div className="hidden lg:flex justify-center items-center py-11">
+          <img src="/image/Slider.svg" alt="" />
         </div>
       </div>
     </main>
