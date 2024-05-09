@@ -11,99 +11,69 @@ import paypal from 'paypal-rest-sdk';
 // import { paypal_mode, paypal_client_id, paypal_client_secret } from "../../../../../../env";
 import { redirect } from 'next/navigation'
 
-
 export async function POST(request: Request) {
     try {
         const body = await request.json();
 
-        const isTempOrder: any = await prisma.tempOrder.findFirst({
+        const temp: any = await prisma.tempOrder.findFirst({
             where: {
                 id: body.tempId,
                 isBlocked: false
+            },
+            include: {
+                items: {
+                    include: {
+                        product: true
+                    }
+                }
             }
         })
 
         let session: any = await getServerSession(authOptions);
         if (!session) { return NextResponse.json({ st: false, statusCode: StatusCodes.BAD_REQUEST, data: [], msg: "You are not logged in", }); }
 
-        let cart: any = await getCart(session?.user?.id)
-        if (!cart) { return NextResponse.json({ st: false, statusCode: StatusCodes.BAD_REQUEST, data: [], msg: "Cart is empty", }); }
-
         const nextInvoice = await getNextInvoice("order")
-        const CartItem = cart?.CartItem
-
-        let itemCount: number = 0
-        let totalAmt: number = 0
-        let discountAmount: number = 0;
-        let taxableAmount: number = 0
-        let GST = 18 //  default percentage, do it dynamic according to tax
-        let netAmount: number = 0
-
-        for (let x in CartItem) {
-
-            const qty = CartItem[x]?.qty
-            const price = CartItem[x].product?.price
-            const total = qty * price
-            const discount = CartItem[x].product?.discount
-
-            if (CartItem[0].product.DiscountType === "PERCENTAGE") {
-                discountAmount += total * discount / 100
-            } else {
-                discountAmount += qty * CartItem[0].product?.discount
-            }
-            totalAmt += total;
-            itemCount += qty
-        }
-
-        taxableAmount = totalAmt - discountAmount
-        GST = (GST * taxableAmount) / 100
-
-        netAmount = taxableAmount + GST
+        const items = temp?.items     
 
         const data: any = {
             invoiceNo: nextInvoice,
             invoiceDate: new Date(),
 
-            itemCount,
+            itemCount: temp.itemCount,
+            total: temp.total,
+            discountAmount: temp.discountAmount,
+            taxableAmount: temp.taxableAmount,
+            tax: temp.tax,
+            otherCharge: temp.otherCharge,
+            netAmount: temp.netAmount,
 
-            total: totalAmt,
-            discountAmount,
-            taxableAmount,
-            tax: GST,
-            otherCharge: 0,
-            netAmount,
-
-            isPaid: true,
-            paidAt: new Date(),
-            payStatus: "SUCCESS",
-            paymentDetail: "paayment done",
-            paymentMethod: "online",
+            isPaid: temp.isPaid,
+            paidAt: temp.paidAt,
+            payStatus: temp.payStatus,
+            paymentDetail: "payment done",
+            paymentMethod: temp.paymentMethod,
 
             orderStatus: "PENDING",
             pendingAt: new Date(),
 
-            cart: { connect: { id: cart.id } },
             user: { connect: { id: session?.user?.id } },
             Transport: { connect: { id: "65f67705f6a5e7edc22123e4" } },
         }
 
         const itemData: any = []
 
-        for (let x in CartItem) {
+        for (let x in items) {
             itemData.push({
-                productId: CartItem[x].productId,
-                qty: CartItem[x].qty,
-                price: CartItem[x].product.price,
-                netAmount: CartItem[x].qty * CartItem[x].product.price,
+                qty: items.qty,
+                price: items.price,
+                productId: items.productId,
                 createdBy: session?.user?.id
             })
         }
 
 
-        let createOrder: any = null;
-        if (isTempOrder?.netAmount === netAmount) {
+        let createOrder: any = null;      
             createOrder = await prisma.order.create({ data })
-
 
             // paypal.configure({
             //     'mode': 'sandbox', //sandbox or live
@@ -159,7 +129,7 @@ export async function POST(request: Request) {
             //         // console.log(payment);
             //     }
             // });
-        }
+        
 
         if (!createOrder) {
             return NextResponse.json({ st: false, statusCode: StatusCodes.BAD_REQUEST, data: [], msg: "order created unsuccess!", });
@@ -170,8 +140,6 @@ export async function POST(request: Request) {
             ({
                 ...item,
                 orderId: createOrder.id,
-                productId: item.productId
-
             }))
         })
 
@@ -182,7 +150,7 @@ export async function POST(request: Request) {
             data: {
                 isBlocked: true,
                 updatedBy: session?.user?.id,
-                tempOrderItem: {
+                items: {
                     updateMany: {
                         where: {
                             tempOrderId: body.tempId

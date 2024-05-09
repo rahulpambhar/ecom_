@@ -11,7 +11,7 @@ import prisma from "../../../../../prisma/prismaClient";
 
 async function getProductReviewsWithAvg(id: string) {
     const [reviews, avgRating] = await Promise.all([
-        prisma.review.findMany({
+        prisma?.review?.findMany({
             where: {
                 productId: id,
             },

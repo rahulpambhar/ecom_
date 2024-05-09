@@ -337,7 +337,6 @@ export async function DELETE(request) {
       }
     }
 
-
     return NextResponse.json({
       st: true,
       data: deletedProduct,

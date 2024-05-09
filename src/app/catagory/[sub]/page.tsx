@@ -3,15 +3,12 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import { fetchCategories } from "../../redux/slices/categorySlice";
-import { useParams } from "next/navigation";
-import CategoryCard from "../../../components/frontside/CategoryCard";
-import { Categories, SubCategory } from "../../../../types/global";
+
 
 import Makeupnailscard from "@/components/frontside/makeup_nails_card/Makeupnailscard";
 import { FaS } from "react-icons/fa6";
 
 const Page = () => {
-  const params = useParams();
   const dispatch = useAppDispatch();
   const products: any[] = useAppSelector(
     (state): any => state?.categories?.products
@@ -50,7 +47,7 @@ const Page = () => {
         <div className=" grid grid-cols-1 md:grid-cols-2  lg:grid-cols-4 pt-5  justify-center items-center">
           {products.length > 0
             ? currentpage.map((item, index) => {
-              let wish: boolean = wishList.find((wish) => (wish.productId === item.id)) ? true : false
+              let wish: boolean = wishList?.find((wish) => (wish?.productId === item.id)) ? true : false
               return <Makeupnailscard key={index} item={item} wish={wish} />;
             })
             : ""}
@@ -66,7 +63,7 @@ const Page = () => {
             </span>
           </button>
           <div className="flex flex-grow gap-5 justify-center items-center text-lg font-bold poppins">
-            {numbers.map((num) => {
+            {numbers?.map((num) => {
               const isCurrentPage = currentPage === num;
               const isWithinRange =
                 num >= currentPage - 1 && num <= currentPage + 1;

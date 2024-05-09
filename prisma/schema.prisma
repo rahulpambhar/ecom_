@@ -63,8 +63,8 @@ model User {
 
     gender             String
     password           String
-    passwordResetToken String?
     otp                Int?
+    passwordResetToken String?
     profile_pic        String?
     isBlocked          Boolean @default(false)
     isAdmin            Boolean @default(false)
@@ -72,6 +72,7 @@ model User {
 
     products    Products[]
     Order       Order[]       @relation("user")
+    ReturnOrder ReturnOrder[] @relation("user")
     tempOrder   tempOrder[]   @relation("user")
     Review      Review[]
     Cart        Cart[]        @relation("user")
@@ -176,9 +177,10 @@ model Products {
     Review    Review[]
     whishlist Whishlist[]
 
-    CartItem      CartItem[]
-    OrderItem     OrderItem[]     @relation("orderProducts")
-    tempOrderItem tempOrderItem[] @relation("orderProducts")
+    CartItem        CartItem[]
+    OrderItem       OrderItem[]       @relation("orderProducts")
+    ReturnOrderItem ReturnOrderItem[] @relation("returnOrderProducts")
+    tempOrderItem   tempOrderItem[]   @relation("orderProducts")
 
     createdAt DateTime @default(now())
     createdBy String?
@@ -276,9 +278,7 @@ model Order {
     acceptedAt   DateTime?
     dispatchedAt DateTime?
     deliveredAt  DateTime?
-    cancelledAt  DateTime?
-    returnedAt   DateTime?
-    refundedAt   DateTime?
+    cancelledAt  DateTime?  
 
     dueDays Int?
     dueDate DateTime? @db.Date()
@@ -298,10 +298,11 @@ model Order {
 
     OrderItem OrderItem[] @relation("OrderItem")
 
-    createdAt DateTime @default(now())
-    createdBy String?
-    updatedAt DateTime @updatedAt
-    updatedBy String?
+    createdAt   DateTime      @default(now())
+    createdBy   String?
+    updatedAt   DateTime      @updatedAt
+    updatedBy   String?
+    ReturnOrder ReturnOrder[]
 
     @@index([userId])
 }
@@ -311,7 +312,6 @@ model OrderItem {
 
     qty       Int?
     price     Float?
-    netAmount Int?
     isBlocked Boolean @default(false)
 
     order   Order?  @relation("OrderItem", fields: [orderId], references: [id])
@@ -367,7 +367,7 @@ model tempOrder {
     transportId   String?        @db.ObjectId
     transportMode transportMode?
 
-    tempOrderItem tempOrderItem[] @relation("tempOrderItem")
+    items tempOrderItem[] @relation("tempOrderItem")
 
     createdAt DateTime @default(now())
     createdBy String?
@@ -400,6 +400,84 @@ model tempOrderItem {
     @@index([productId])
 }
 
+model ReturnOrder {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+
+    invoiceNo   String?
+    invoiceDate DateTime @db.Date()
+
+    itemCount Int?
+
+    discountAmount Float
+    total          Int
+    taxableAmount  Int
+    tax            Int
+    otherCharge    Int
+    charge         Json? // note for charges or extra charges
+    netAmount      Int
+
+    isPaid        Boolean
+    paidAt        DateTime?
+    payStatus     Status
+    paymentDetail Json?
+    paymentMethod String?
+
+    orderRerunrnStatus OrderStatus
+    pendingAt          DateTime?
+    processingAt       DateTime?
+    acceptedAt         DateTime?
+    dispatchedAt       DateTime?
+    deliveredAt        DateTime?
+    cancelledAt        DateTime?
+    returnedAt         DateTime?
+    refundedAt         DateTime? 
+
+    isBlocked  Boolean @default(false)
+    attachment String?
+
+    user   User?   @relation("user", fields: [userId], references: [id])
+    userId String? @db.ObjectId
+
+    orderId String? @db.ObjectId
+    order   Order?  @relation(fields: [orderId], references: [id])
+
+    Transport     Transport?     @relation("transportReturnOrder", fields: [transportId], references: [id])
+    transportId   String?        @db.ObjectId
+    transportMode transportMode?
+
+    items ReturnOrderItem[] @relation("ReturnOrderItem")
+
+    createdAt DateTime @default(now())
+    createdBy String?
+    updatedAt DateTime @updatedAt
+    updatedBy String?
+
+    @@index([userId])
+}
+
+model ReturnOrderItem {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+
+    qty       Int?
+    price     Float?
+    netAmount Int?
+    isBlocked Boolean @default(false)
+
+    createdAt DateTime @default(now())
+    createdBy String?
+    updatedAt DateTime @updatedAt
+    updatedBy String?
+
+    ReturnOrder   ReturnOrder? @relation("ReturnOrderItem", fields: [returnOrderId], references: [id])
+    returnOrderId String?      @db.ObjectId
+
+    product   Products? @relation("returnOrderProducts", fields: [productId], references: [id])
+    productId String?   @db.ObjectId
+
+    @@index([returnOrderId])
+    @@index([productId])
+}
+
 model Review {
     id String @id @default(auto()) @map("_id") @db.ObjectId
 
@@ -422,6 +500,17 @@ model Review {
 
     @@index([userId])
     @@index([productId])
+}
+
+model newsletter {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+
+    email String @unique
+
+    createdAt DateTime @default(now())
+    createdBy String?
+    updatedAt DateTime @updatedAt
+    updatedBy String?
 }
 
 model activityLog {
@@ -450,8 +539,9 @@ model Transport {
     gstNo          String
     isDelete       Boolean @default(false)
 
-    order     Order[]     @relation("transportOrder")
-    tempOrder tempOrder[] @relation("transportOrder")
+    order       Order[]       @relation("transportOrder")
+    ReturnOrder ReturnOrder[] @relation("transportReturnOrder")
+    tempOrder   tempOrder[]   @relation("transportOrder")
 
     createdAt DateTime @default(now())
     createdBy String

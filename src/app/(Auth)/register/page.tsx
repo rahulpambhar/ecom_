@@ -3,16 +3,13 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from 'react';
 // import LoaderComponents from "@/components/Loader";
 import { useRouter } from "next/navigation";
-import { isLoginModel, setOpenCart } from '@/app/redux/slices/utilSlice';
-import { useAppSelector, useAppDispatch } from '@/app/redux/hooks';
-import axios from "axios";
+import { setOpenCart } from '@/app/redux/slices/utilSlice';
 import { apiUrl } from "../../../../env"
-import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup'
-import Loader from "react-js-loader";
 import twilio from 'twilio';
-
-
+import { useAppDispatch, useAppSelector } from "@/app/redux/hooks";
+import { ErrorMessage, Field, Form, Formik } from "formik";
+import axios from "axios";
 
 const validationSchema = Yup.object({
     email: Yup.string().email('Invalid email address').required('Required'),
@@ -59,24 +56,22 @@ const RegisterComponents = () => {
                         // validationSchema={validationSchema}
                         onSubmit={async (values: any, { setSubmitting }) => {
                             try {
-                                setLoader(true)
+                                setLoader(true);
 
-                                // let formData = new FormData();
-                                // formData.append("name", values.name);
-                                // formData.append("email", values.email);
-                                // formData.append("country_code", values.country_code);
-                                // formData.append("mobile", values.mobile);
-                                // formData.append("gender", values.gender);
-                                // formData.append("password", values.password);
-                                // formData.append("profile_pic", values.profile_pic);
-                                // formData.append("type", "add");
-
-                                setLoader(false)
-                                const res = await axios.post(`http://localhost:3000/api/Auth/users/signup`,)
-                                console.log(res);
+                                let formData = new FormData();
+                                formData.append("name", values.name);
+                                formData.append("email", values.email);
+                                formData.append("country_code", values.country_code);
+                                formData.append("mobile", values.mobile);
+                                formData.append("gender", values.gender);
+                                formData.append("password", values.password);
+                                formData.append("profile_pic", values.profile_pic);
+                                formData.append("type", "add");
+                                setLoader(false);
+                                const res = await axios.post(`http://localhost:3000/api/slug/signup`);
                             } catch (e) {
                                 console.log('e::: ', e);
-                                setLoader(false)
+                                setLoader(false);
                             }
                         }}
                     >
@@ -111,8 +106,7 @@ const RegisterComponents = () => {
                                     <label htmlFor="address" className="bloc font-semibold">
                                         Mobile
                                     </label>
-                                    <Field type="text" name="mobile" className="w-full registration px-2 border-black py-1 bg-gray-300 border rounded mt-2"
-                                    />
+                                    <Field type="text" name="mobile" className="w-full registration px-2 border-black py-1 bg-gray-300 border rounded mt-2" />
                                     <ErrorMessage name="mobile" component="div" className="text-red-500 text-sm" />
                                 </div>
 
@@ -160,7 +154,7 @@ const RegisterComponents = () => {
                                     <Field type="password" name="password" className="w-full registration px-2 py-1 border px-2 border-black bg-gray-300 rounded mt-2" />
                                     <ErrorMessage name="password" component="div" className="text-red-500 text-sm" />
                                 </div>
-                                <div className="" >
+                                <div className="">
                                     <button className="bg-black text-white font-bold cursor-pointer px-6 py-4 hover:shadow-2xl w-full text-2xl" type="submit">
                                         {loader ? <Loader type="spinner-default" bgColor="white" color="white" size={50} /> : "Register"}
                                     </button>
@@ -178,7 +172,7 @@ const RegisterComponents = () => {
                 </div>
             </div>
         </>
-    )
-}
+    );
+};
 
 export default RegisterComponents;

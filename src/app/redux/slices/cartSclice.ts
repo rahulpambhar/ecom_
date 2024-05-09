@@ -24,6 +24,7 @@ const actionTocartFunc = createAsyncThunk('cart/createCart', async (payload: { p
 
 const initialState: any = {
     cart: {},
+    cartItem: [],
     loading: false,
     error: null,
     status: 'idle',
@@ -35,34 +36,45 @@ const cartReducer = createSlice({
     reducers: {
         addToCart: (state, action: any) => {
             state.categories.push(action.payload);
-        }     
+        }
     },
 
     extraReducers: (builder) => {
         builder
             .addCase(actionTocartFunc.pending, (state) => {
                 state.status = 'loading';
+                state.loading = true;
             })
             .addCase(actionTocartFunc.fulfilled, (state, action) => {
                 state.status = 'succeeded';
                 state.cart = action.payload?.data;
+                state.cartItem = action.payload?.data?.CartItem?.map((item: any) => {
+                    return { ...item, checked: true }
+                });
+                state.loading = false;
             })
             .addCase(actionTocartFunc.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.error.message ?? null;
+                state.loading = false;
             })
 
             .addCase(fetchCart.pending, (state) => {
+                state.loading = true;
                 state.status = 'loading';
             })
             .addCase(fetchCart.fulfilled, (state, action) => {
-              
                 state.status = 'succeeded';
                 state.cart = action.payload?.data;
+                state.cartItem = action.payload?.data?.CartItem?.map((item: any) => {
+                    return { ...item, checked: true }
+                });
+                state.loading = false;
             })
             .addCase(fetchCart.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.error.message ?? null;
+                state.loading = false;
             });
     },
 });

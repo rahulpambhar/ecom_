@@ -72,3 +72,4 @@ select:focus {
     outline: none; /* Remove focus outline */
     box-shadow: 0 0 5px rgba(0, 0, 0., 0.6); /* Add box shadow on focus */
 }
+

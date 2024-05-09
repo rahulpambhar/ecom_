@@ -13,6 +13,27 @@ import { toast } from "react-hot-toast"
 import { successToast, errorToast } from './toster';
 
 
+export const actionTocartFunction_ = async (item: any, action: any, dispatch: any) => {
+
+    try {
+        const payload = { productId: item?.productId, action }
+        if (action === "remove" && item.qty <= 1) {
+            errorToast("Minimum 1 quantity required")
+            return;
+        }
+
+        const data = await dispatch(actionTocartFunc(payload))
+
+        if (data?.payload.st) {
+            successToast(data?.payload.msg)
+        } else {
+            errorToast(data.payload.msg)
+        }
+    } catch (err) {
+        errorToast(err);
+    }
+}
+
 export default function Example() {
     const { data: session, status } = useSession();
     let [subTotal, setSubTotal] = useState(0)
@@ -20,29 +41,11 @@ export default function Example() {
 
     const openCart = useAppSelector((state) => state?.utilReducer?.openCart);
     const cartItem = useAppSelector((state) => state?.cartReducer?.cart?.CartItem) || [];
-
+    const isLoading = useAppSelector((state) => state?.cartReducer?.loading);
 
     const dispatch = useAppDispatch();
 
-    const actionTocartFunction = async (item: any, action: any) => {
-        try {
-            const payload = { productId: item?.productId, action }
-            if (action === "remove" && item.qty === 1) {
-                errorToast("Minimum 1 quantity required")
-                return;
-            }
-
-            const data = await dispatch(actionTocartFunc(payload))
-
-            if (data?.payload.st) {
-                successToast(data?.payload.msg)
-            } else {
-                errorToast(data.payload.msg)
-            }
-        } catch (err) {
-            errorToast(err);
-        }
-    }
+    const actionTocartFunction = (item: any, action: any) => actionTocartFunction_(item, action, dispatch)
 
     useEffect(() => {
         setSubTotal(
@@ -122,21 +125,20 @@ export default function Example() {
                                                                         </div>
                                                                         <div className="flex flex-1 items-end justify-between text-sm">
 
-                                                                            <button className='text-black' onClick={() => {
+                                                                            <button className='text-black' disabled={isLoading} onClick={() => {
                                                                                 session ? actionTocartFunction(item, "remove") : dispatch(isLoginModel(false));
                                                                             }}>-</button>
 
                                                                             <p className="text-gray-500">{item?.qty}</p>
 
-                                                                            <button className='text-black' onClick={() => {
+                                                                            <button className='text-black' disabled={isLoading} onClick={() => {
                                                                                 session ? actionTocartFunction(item, "add") : dispatch(isLoginModel(false));
                                                                             }}>+</button>
 
                                                                             <div className="flex">
-                                                                                <button
+                                                                                <button disabled={isLoading}
                                                                                     onClick={() => {
                                                                                         session ? actionTocartFunction(item, "delete") : dispatch(isLoginModel(false));
-
                                                                                     }}
                                                                                     type="button"
                                                                                     className="font-medium text-indigo-600 hover:text-indigo-500"
@@ -165,7 +167,7 @@ export default function Example() {
                                                         className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
                                                         onClick={() => {
                                                             if (session) {
-                                                                router.push('/checkout')
+                                                                router.push('/checkout/estimation')
 
                                                             } else {
                                                                 errorToast("Please login first")
@@ -201,3 +203,5 @@ export default function Example() {
 
     )
 }
+
+

@@ -34,8 +34,6 @@ const Makeupnailscard = ({ item, wish }: { item: any; wish: boolean }) => {
   const cart = useAppSelector((state) => state?.cartReducer?.cart?.CartItem) || [];
   const openCart = useAppSelector((state) => state?.utilReducer?.openCart);
 
-
-
   const handelike = async () => {
     if (session) {
       dispatch(addToWishList({ productId: item.id, }));     
@@ -47,14 +45,12 @@ const Makeupnailscard = ({ item, wish }: { item: any; wish: boolean }) => {
   const addToCartFunction = async (id: string) => {
     const payload = { productId: id, action: "add" }
     const data = await dispatch(actionTocartFunc(payload))
-
     if (data.payload.st) {
       successToast(data?.payload.msg)
     } else {
       errorToast(data.payload.msg)
     }
   } 
-
 
   return (
     <>
@@ -136,15 +132,20 @@ const Makeupnailscard = ({ item, wish }: { item: any; wish: boolean }) => {
                 Add to cart
               </button>
           }
-          <button
+          <Link href={`/preview/${item.id}`}
             className="border rounded-full text-xs border-indigo-400 px-2 py-1 hover:border-amber-800 text-black"
-            onClick={() => {
-              sePriview(item)
-              setOpenPreview(!openPreview)
-            }}
+            // onClick={() => {
+            //   sePriview(item)
+            //   setOpenPreview(!openPreview)
+            // }}
           >
             Preview
-          </button>
+          </Link>
+          <Link href={`/buy/${item.id}`}
+            className="border rounded-full text-xs border-indigo-400 px-2 py-1 hover:border-amber-800 text-black"         
+          >
+            Buy
+          </Link>
         </div>
         <Cart />
         <ProductPreview

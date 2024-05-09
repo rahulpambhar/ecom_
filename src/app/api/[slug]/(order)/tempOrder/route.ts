@@ -16,7 +16,7 @@ export async function POST(request: Request) {
         if (!session) { return NextResponse.json({ st: false, statusCode: StatusCodes.BAD_REQUEST, data: [], msg: "You are not logged in", }); }
 
         const body = await request.json();
-        const { orderID } = body
+        const { orderMeta } = body
         let nextInvoice: string = ""
         let items: any = []
         let cart: any = {}
@@ -29,45 +29,44 @@ export async function POST(request: Request) {
         let GST = 18 //  default percentage, do it dynamic according to tax
         let netAmount: number = 0
 
-        if (orderID) {
 
-             order = await prisma.order.findFirst({
-                where: {
-                    id: orderID
+
+        nextInvoice = await getNextInvoice("tempOrder")
+
+        const products = await prisma.products.findMany({
+            where: {
+                id: {
+                    in: orderMeta?.selectedItems?.map((item: any) => item?.productId)
                 },
-                include: {
-                    OrderItem: {
-                        include: {
-                            product: true
-                        }
-                    }
-                }
-            })
-
-            if (!order) {
-                return NextResponse.json({ st: false, statusCode: StatusCodes.BAD_REQUEST, data: [], msg: "Order not found", });
+                isBlocked: false
             }
+        })
 
-            nextInvoice = await getNextInvoice("tempOrder")
-            items = order?.OrderItem
-        } else {
-            cart = await getCart(session?.user?.id)
-            if (!cart) { return NextResponse.json({ st: false, statusCode: StatusCodes.BAD_REQUEST, data: [], msg: "Cart is empty", }); }
+        items = orderMeta?.selectedItems?.map((item: any) => {
+            const product = products?.find((product: any) => {
+                return product?.id === item?.productId;
+            });
 
-            nextInvoice = await getNextInvoice("tempOrder")
-            items = cart?.CartItem
-        }
+            if (product) {
+                return {
+                    ...product,
+                    orderedQty: item?.qty
+                };
+            }
+        })
 
-        for (let x in items) {
-            const qty = items[x]?.qty
-            const price = items[x].product?.price
+        for (let item of items) {
+
+            const qty = item?.orderedQty
+            const price = item?.price
+
             const total = qty * price
-            const discount = items[x].product?.discount
+            const discount = item?.discount
 
-            if (items[0].product.DiscountType === "PERCENTAGE") {
+            if (item.DiscountType === "PERCENTAGE") {
                 discountAmount += total * discount / 100
             } else {
-                discountAmount += qty * items[0].product?.discount
+                discountAmount += qty * item?.discount
             }
             totalAmt += total;
             itemCount += qty
@@ -78,7 +77,7 @@ export async function POST(request: Request) {
 
         netAmount = taxableAmount + GST
 
-        const data: any = {
+        let data: any = {
             invoiceNo: nextInvoice,
             invoiceDate: new Date(),
 
@@ -89,7 +88,7 @@ export async function POST(request: Request) {
             taxableAmount,
             tax: GST,
             otherCharge: 0,
-            netAmount,
+            netAmount: netAmount,
 
             isPaid: true,
             paidAt: new Date(),
@@ -97,20 +96,17 @@ export async function POST(request: Request) {
             paymentDetail: "paayment done",
             paymentMethod: "online",
 
-            cart: orderID ? { connect: { id: order?.cartId } } : { connect: { id: cart?.id } },
             user: { connect: { id: session?.user?.id } },
             Transport: { connect: { id: "65f67705f6a5e7edc22123e4" } },
             createdBy: session?.user?.id
         }
 
-
         const itemData: any = []
 
-        for (let x in items) {
+        for (let item of items) {
             itemData.push({
-                qty: items[x].qty,
-                price: items[x].product.price,
-                netAmount: items[x].qty * items[x].product.price,
+                qty: item?.orderedQty,
+                price: item?.price,
                 createdBy: session?.user?.id
             })
         }
@@ -131,7 +127,7 @@ export async function POST(request: Request) {
         })
 
         await activityLog("INSERT", "tempOrder", data, session?.user?.id);
-        return NextResponse.json({ st: true, statusCode: StatusCodes.OK, data: [], msg: "order created successfully!", temOrdrId: createTemp.id });
+        return NextResponse.json({ st: true, statusCode: StatusCodes.OK, data: [], msg: "Temp order created successfully!", temOrdrId: createTemp.id });
 
     } catch (error) {
         console.log('error::: ', error);
