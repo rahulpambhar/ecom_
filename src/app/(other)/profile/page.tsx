@@ -9,6 +9,7 @@ import Link from 'next/link';
 import moment from "moment"
 import { getReturnOrdersFunc } from '@/app/redux/slices/returnOrderSlice';
 
+
 export default function Checkout() {
     const { data: session, status }: any = useSession();
     const dispatch = useAppDispatch();
@@ -17,7 +18,6 @@ export default function Checkout() {
     const orders: any[] = useAppSelector((state) => state?.orderReducer?.orders);
     const wishlist: any[] = useAppSelector((state) => state?.wishListReducer?.wishList);
     const returnOrder: any[] = useAppSelector((state) => state?.returnOrderReducer.returnOrders);
-    console.log('returnOrder::: ', returnOrder);
 
     const [component, setComponent] = useState("Account");
     const [pegiLenght, setLength] = useState(0);
@@ -45,6 +45,9 @@ export default function Checkout() {
     useEffect(() => {
         session && search === "1" ? setComponent("Wishlist") : ""
     }, [session, search])
+
+    console.log("hello")
+
 
     return (
         <>
